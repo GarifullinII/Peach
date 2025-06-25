@@ -1,0 +1,78 @@
+/* Localizable.strings
+  Peach
+
+  Created by Василий on 05.09.2023.
+  
+*/
+
+"calendar" = "Календарь";
+"assistant" = "Ассистент";
+"profile" = "Профиль";
+"underDevelopment" = "В разработке";
+"private_assistant" = "Личный ассистент";
+"health_report_pdf" = "Отчет о здоровье в PDF";
+"premiumAccount" = "Премиум-аккаунт";
+"premiumGreetings" = "Привет, это твой персональный ассистент – здесь ты можешь задавать любые свои вопросы и получить на них ответы моментально! :)";
+"checkOut" = "Перейти к оплате";
+"askQuestion" = "Задать вопрос";
+"save" = "Сохранить";
+"changeDate" = "Изменить дату месячных";
+"exit" = "Выйти";
+"track_your_cycle" = "Отслеживай цикл";
+"track_your_symptoms" = "Отслеживай симптомы";
+"convenient_calendar" = "Удобный календарь и напоминания";
+"assistant_will_answer" = "Ответит на любые вопросы в любое время дня и ночи";
+"share_symptoms" = "Ими можно легко поделиться с врачом";
+"continue" = "Продолжить";
+"skip" = "Пропустить";
+"connectPreemium" = "Подключить премиум-аккаунт";
+"first_quiestions_free" = "Первые 10 вопросов задай бесплатно!";
+"step_one" = "Шаг 1 из 3";
+"step_two" = "Шаг 2 из 3";
+"step_three" = "Шаг 3 из 3";
+"lets_meet" = "Познакомимся?";
+"when_cycle_started" = "Когда начались последние месячные?";
+"what_is_your_name" = "Как тебя зовут?";
+"how_old_are_you" = "Сколько тебе лет?";
+"select_date" = "Выберите дату";
+"cycle_duration" = "Продолжительность цикла";
+"ok" = "Понятно";
+"fill_all_fields" = "Заполните все поля";
+"done" = "Готово";
+"select_subscription" = "Выберите подписку";
+"symptoms" = "Симптомы";
+"discharge" = "Выделения";
+"profuse_bleeding" = "Обильность кровоточения";
+"add_symptom" = "Добавить симптом";
+"normal" = "😊 В норме";
+"headache" = "😵‍💫 Головная боль";
+"fatigue" = "😞 Усталость";
+"pimples" = "👺 Прыщи";
+"pain_in_the_lower_abdomen" = "🥺 Боли внизу живота";
+"bloating" = "🎈 Вздутие живота";
+"nausea" = "🤢 Тошнота";
+"food_cravings" = "🍔 Тяга к еде";
+"constipation" = "❌ Запор";
+"diarrhea" = "🌈 Диарея";
+"itching_in_the_vagina" = "🤬 Зуд во влагалище";
+"no_discharge" = "Выделений нет";
+"with_blood" = "С кровью";
+"sticky" = "Липкие";
+"watery" = "Водянистые";
+"white" = "Белые";
+"light" = "🩸 Легкое";
+"medium" = "🩸🩸 Умеренное";
+"strong" = "🩸🩸🩸 Сильное";
+"blood_clots" = "Сгустки крови";
+"write_smth" = "Напишите что-нибудь";
+"ask_question" = "Задайте вопрос";
+"ask_ten_questions_free" = "Тут ты можешь задавать любые свои вопросы и получить на них ответы моментально :) Бесплатно ты можешь задать 10 вопросов ✨";
+"personal_assistant" = "Персональный ассистент";
+"mark_symptoms" = " Отметить симптомы";
+"me" = "Я";
+"limitQuestionsIsOver" = "Тут ты можешь задавать любые свои вопросы и получить на них ответы моментально :)";
+"period" = "Месячные";
+"change_period_date" = "Изменить дату месячных";
+"ovulation" = "Овуляция";
+"mark_your_period" = "Отметить месячные";
+"cancel" = "Отменить";

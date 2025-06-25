@@ -1,0 +1,21 @@
+//
+//  SignInEvents.swift
+//  Peach
+//
+//  Created by Василий on 14.09.2023.
+//
+
+import Foundation
+
+enum SignInEvents {
+    case fillFromTopTF(String, Int)
+    case fillFromBottomTF(String)
+    case setDate(Date)
+    case saveModel
+    case showAlert
+}
+
+enum SignInOutput {
+    case showAlert
+    case dismiss
+}

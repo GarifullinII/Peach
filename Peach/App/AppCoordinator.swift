@@ -1,0 +1,111 @@
+//
+//  AppCoordinator.swift
+//  Peach
+//
+//  Created by Василий on 05.09.2023.
+//
+
+import UIKit
+import Combine
+
+final class AppCoordinator: BaseCoordinator {
+
+    // MARK: - Properties
+
+    private let window: UIWindow
+
+    private var cancellable: AnyCancellable?
+
+    // MARK: - Initializers
+
+    init(window: UIWindow) {
+        self.window = window
+    }
+
+    // MARK: - Instance methods
+
+    override func start() {
+        childCoordinators.forEach {
+            removeDependency($0)
+        }
+
+        let isUserFirstLaunch = !UserDefaults.standard.bool(forKey: Config.userFirstLaunchKey.rawValue)
+        let isUserExist = UserDefaultsManager.shared.load(UserModel.self, Config.userModelKey.rawValue) != nil
+
+        if isUserFirstLaunch {
+            showOnboarding()
+        } else {
+            if isUserExist {
+                showMain()
+            } else {
+                showSignIn()
+            }
+        }
+    }
+
+    private func showMain() {
+        let navigationController = UINavigationController()
+        let router = RouterImpl(navigationController: navigationController)
+        let coordinator = MainCoordinator(router: router)
+
+        cancellable = coordinator.output.sink { [weak self, weak coordinator] output in
+            guard let self else { return }
+
+            switch output {
+            case .dismiss:
+                self.removeDependency(coordinator)
+                DispatchQueue.main.async {
+                    self.showSignIn()
+                }
+            }
+        }
+
+        coordinator.start()
+        addDependency(coordinator)
+        window.rootViewController = navigationController
+    }
+
+    private func showOnboarding() {
+        let navigationController = UINavigationController()
+        let router = RouterImpl(navigationController: navigationController)
+        let coordinator = OnboardingCoordinator(router: router)
+
+        cancellable = coordinator.output.sink { [weak self, weak coordinator] output in
+            guard let self else { return }
+
+            switch output {
+            case .dismiss:
+                self.removeDependency(coordinator)
+                DispatchQueue.main.async {
+                    self.showMain()
+                }
+            }
+        }
+
+        coordinator.start()
+        addDependency(coordinator)
+        window.rootViewController = navigationController
+    }
+
+    private func showSignIn() {
+        let navigationController = UINavigationController()
+        let router = RouterImpl(navigationController: navigationController)
+        let coordinator = SignInCoordinator(router: router)
+
+        cancellable = coordinator.output.sink { [weak self, weak coordinator] output in
+            guard let self else { return }
+
+            switch output {
+            case .dismiss:
+                self.removeDependency(coordinator)
+                DispatchQueue.main.async {
+                    self.showMain()
+                }
+            }
+        }
+
+        coordinator.start()
+        addDependency(coordinator)
+        window.rootViewController = navigationController
+    }
+}

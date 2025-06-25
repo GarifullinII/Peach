@@ -1,0 +1,79 @@
+/* 
+  Localizable.strings
+  Peach
+
+  Created by Василий on 05.09.2023.
+  
+*/
+
+"calendar" = "Сalendar";
+"assistant" = "Assistant";
+"profile" = "Profile";
+"underDevelopment" = "Under development";
+"private_assistant" = "Personal assistant";
+"health_report_pdf" = "Health report in PDF";
+"premiumAccount" = "Premium-account";
+"premiumGreetings" = "Hello, this is your personal assistant - here you can ask any of your questions and get answers to them instantly! :)";
+"checkOut" = "Checkout";
+"askQuestion" = "Ask a question";
+"save" = "Save";
+"changeDate" = "Change your period";
+"exit" = "Sign out";
+"track_your_cycle" = "Track your cycle";
+"track_your_symptoms" = "Track your symptoms";
+"convenient_calendar" = "Convenient calendar and reminders";
+"assistant_will_answer" = "Will answer any questions at any time of the day or night";
+"share_symptoms" = "They can be easily shared with your doctor";
+"continue" = "Сontinue";
+"skip" = "Skip";
+"connectPreemium" = "Connect a premium-account";
+"first_quiestions_free" = "Fisrt 10 questions free!";
+"step_one" = "Step 1 of 3";
+"step_two" = "Step 2 of 3";
+"step_three" = "Step 3 of 3";
+"lets_meet" = "Let's meet?";
+"when_cycle_started" = "When did your last period start?";
+"what_is_your_name" = "What is your name?";
+"how_old_are_you" = "How old are you?";
+"select_date" = "Select date";
+"cycle_duration" = "Сycle duration";
+"ok" = "Ok";
+"fill_all_fields" = "Fill in all the fields";
+"done" = "Done";
+"select_subscription" = "Select subscription";
+"symptoms" = "Symptoms";
+"discharge" = "Discharge";
+"profuse_bleeding" = "Profuse bleeding";
+"add_symptom" = "Add symptom";
+"normal" = "😊 Normal";
+"headache" = "😵‍💫 Headache";
+"fatigue" = "😞 Fatigue";
+"pimples" = "👺 Pimples";
+"pain_in_the_lower_abdomen" = "🥺 Pain in the lower abdomen";
+"bloating" = "🎈 Bloating";
+"nausea" = "🤢 Nausea";
+"food_cravings" = "🍔 Food cravings";
+"constipation" = "❌ Constipation";
+"diarrhea" = "🌈 Diarrhea";
+"itching_in_the_vagina" = "🤬 Itching in the vagina";
+"no_discharge" = "No discharge";
+"with_blood" = "With blood";
+"sticky" = "Sticky";
+"watery" = "Watery";
+"white" = "White";
+"light" = "🩸 Light";
+"medium" = "🩸🩸 Medium";
+"strong" = "🩸🩸🩸 Strong";
+"blood_clots" = "Blood clots";
+"write_smth" = "Write something";
+"ask_question" = "Ask a question";
+"ask_ten_questions_free" = "Here you can ask any of your questions and get answers to them instantly :) You can ask 10 questions for free ✨";
+"personal_assistant" = "Personal assistant";
+"mark_symptoms" = " Mark symptoms";
+"me" = "Me";
+"limitQuestionsIsOver" = "Here you can ask any questions you have and get answers instantly :)";
+"period" = "Period";
+"change_period_date" = "Сhange period date";
+"ovulation" = "Ovulation";
+"mark_your_period" = "Mark your period";
+"cancel" = "Cancel";

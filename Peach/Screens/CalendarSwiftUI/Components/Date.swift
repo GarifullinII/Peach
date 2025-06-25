@@ -1,0 +1,114 @@
+//
+//  Date.swift
+//  Peach
+//
+//  Created by Василий on 30.10.2023.
+//
+
+import SwiftUI
+
+struct RKDate {
+
+    // MARK: - Properties
+
+    private var date: Date
+
+    private var isDisabled: Bool = false
+
+    private var isToday: Bool = false
+
+    private var isSelected: Bool = false
+
+    private var isBetweenStartAndEnd: Bool = false
+
+    private let rkManager: RKManager
+
+    // MARK: - Initializers
+
+    init(
+        date: Date,
+        rkManager: RKManager,
+        isDisabled: Bool,
+        isToday: Bool,
+        isSelected: Bool,
+        isBetweenStartAndEnd: Bool
+    ) {
+        self.date = date
+        self.rkManager = rkManager
+        self.isDisabled = isDisabled
+        self.isToday = isToday
+        self.isSelected = isSelected
+        self.isBetweenStartAndEnd = isBetweenStartAndEnd
+    }
+
+    // MARK: - Instance methods
+
+    func getText() -> String {
+        let day = formatDate(date: date, calendar: self.rkManager.calendar)
+        return day
+    }
+
+    func getTextColor() -> Color {
+        var textColor = rkManager.colors.textColor
+        if isDisabled {
+            textColor = rkManager.colors.disabledColor
+        } else if isSelected {
+            textColor = rkManager.colors.selectedColor
+        } else if isToday {
+            textColor = rkManager.colors.todayColor
+        } else if isBetweenStartAndEnd {
+            textColor = rkManager.colors.betweenStartAndEndColor
+        }
+        return textColor
+    }
+
+    func getBackgroundColor() -> Color {
+        var backgroundColor = rkManager.colors.textBackColor
+        if isBetweenStartAndEnd {
+            backgroundColor = rkManager.colors.betweenStartAndEndBackColor
+        }
+        if isToday {
+            backgroundColor = rkManager.colors.todayBackColor
+        }
+        if isDisabled {
+            backgroundColor = rkManager.colors.disabledBackColor
+        }
+        if isSelected {
+            backgroundColor = rkManager.colors.mainPink
+        }
+        return backgroundColor
+    }
+
+    func getFontWeight() -> Font.Weight {
+        var fontWeight = Font.Weight.medium
+        if isDisabled {
+            fontWeight = Font.Weight.thin
+        } else if isSelected {
+            fontWeight = Font.Weight.heavy
+        } else if isToday {
+            fontWeight = Font.Weight.heavy
+        } else if isBetweenStartAndEnd {
+            fontWeight = Font.Weight.heavy
+        }
+        return fontWeight
+    }
+
+    private func formatDate(date: Date, calendar: Calendar) -> String {
+        let formatter = dateFormatter()
+        return stringFrom(date: date, formatter: formatter, calendar: calendar)
+    }
+
+    private func dateFormatter() -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = .current
+        formatter.dateFormat = "d"
+        return formatter
+    }
+
+    private func stringFrom(date: Date, formatter: DateFormatter, calendar: Calendar) -> String {
+        if formatter.calendar != calendar {
+            formatter.calendar = calendar
+        }
+        return formatter.string(from: date)
+    }
+}
