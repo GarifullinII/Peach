@@ -11,9 +11,10 @@ struct UserModel: Codable {
     var id = UUID().uuidString
     var name: String? = nil
     var age: Int? = nil
+    var birthDate: Date?
     var start_cycle_date: Date? = nil
     var cycle_duration: Int? = nil
-
+    
     var isFilled: Bool {
         return name != nil && age != nil && start_cycle_date != nil && cycle_duration != nil
     }

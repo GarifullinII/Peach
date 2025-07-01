@@ -79,7 +79,16 @@ enum AssetString: String {
     case ovulation = "ovulation"
     case mark_your_period = "mark_your_period"
     case cancel = "cancel"
-
+    
+    case enter_age = "enter_age"
+    case select_birth_date = "select_birth_date"
+    case invalid_age = "invalid_age"
+    case age_input_method = "age_input_method"
+    case manual_input = "manual_input"
+    case date_selection = "date_selection"
+    case warning = "warning"
+    case age_restriction = "age_restriction"
+    
     var text: String {
         return NSLocalizedString(rawValue, comment: "")
     }
