@@ -31,7 +31,7 @@ final class CommonTextField: UITextField {
         
         var keyboardType: UIKeyboardType {
             switch self {
-            case .age: return .numberPad
+            case .age, .cycleDuration: return .numberPad
             default: return .default
             }
         }
@@ -57,26 +57,27 @@ final class CommonTextField: UITextField {
     }
     
     var textDidChange: ((String) -> Void)?
+    var onDateSelected: ((Date) -> Void)?
+    var onValueSelected: ((Int) -> Void)?
     
     private lazy var datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .wheels
-        
-        // Устанавливаем минимальную и максимальную даты
         let calendar = Calendar.current
-        let currentDate = Date()
-        
-        // Максимальная дата - текущая дата (1 июля 2025)
-        picker.maximumDate = currentDate
-        
-        // Минимальная дата - 1 июля 1925
+        picker.maximumDate = Date()
         var components = DateComponents()
         components.year = 1925
         components.month = 7
         components.day = 1
         picker.minimumDate = calendar.date(from: components)
-        
+        return picker
+    }()
+    
+    private lazy var pickerView: UIPickerView = {
+        let picker = UIPickerView()
+        picker.delegate = self
+        picker.dataSource = self
         return picker
     }()
     
@@ -94,8 +95,6 @@ final class CommonTextField: UITextField {
         ], animated: false)
         return toolbar
     }()
-    
-    var onDateSelected: ((Date) -> Void)?
     
     private var isShowingDatePicker = false
     
@@ -123,55 +122,77 @@ final class CommonTextField: UITextField {
         snp.makeConstraints { make in
             make.height.equalTo(56)
         }
+        
+        accessibilityLabel = fieldState.placeholderText
+        accessibilityHint = "Введите или выберите \(fieldState.placeholderText.lowercased())"
     }
     
     private func configure() {
         placeholder = fieldState.placeholderText
-        keyboardType = fieldState.keyboardType
-        
-        inputView = nil
-        inputAccessoryView = nil
-        
-        if let icon = fieldState.rightIcon {
-            let button = UIButton(type: .custom)
-            button.setImage(icon, for: .normal)
-            button.addTarget(self, action: #selector(calendarIconTapped), for: .touchUpInside)
-            
-            let container = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
-            button.frame = container.bounds
-            container.addSubview(button)
-            
-            rightView = container
-            rightViewMode = .always
-            
-            if fieldState.usesDatePicker {
-                inputView = datePicker
-                inputAccessoryView = toolbar
-            }
-        } else {
-            rightView = nil
-            rightViewMode = .never
+                keyboardType = fieldState.keyboardType
+                inputView = nil
+                inputAccessoryView = nil
+                
+                if let icon = fieldState.rightIcon {
+                    let button = UIButton(type: .custom)
+                    button.setImage(icon, for: .normal)
+                    button.addTarget(self, action: #selector(iconTapped), for: .touchUpInside)
+                    
+                    let container = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
+                    button.frame = container.bounds
+                    container.addSubview(button)
+                    
+                    rightView = container
+                    rightViewMode = .always
+                    
+                    if fieldState.usesDatePicker {
+                        inputView = datePicker
+                        inputAccessoryView = toolbar
+                    } else if fieldState == .cycleDuration {
+                        inputView = pickerView
+                        inputAccessoryView = toolbar
+                    } else if fieldState == .age {
+                        inputView = nil
+                        inputAccessoryView = toolbar
+                    }
+                } else {
+                    rightView = nil
+                    rightViewMode = .never
+                }
+                
+                if fieldState == .cycleStartDate {
+                    let calendar = Calendar.current
+                    datePicker.minimumDate = calendar.date(byAdding: .day, value: -365, to: Date())
+                }
+    }
+    
+    @objc private func iconTapped() {
+        if fieldState.usesDatePicker || fieldState == .cycleDuration {
+            becomeFirstResponder()
         }
     }
     
-    @objc private func calendarIconTapped() {
-        guard fieldState.usesDatePicker else { return }
-        becomeFirstResponder()
-    }
-    
     @objc private func doneButtonTapped() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        text = formatter.string(from: datePicker.date)
-        onDateSelected?(datePicker.date)
+        if fieldState == .cycleDuration {
+            let selectedRow = pickerView.selectedRow(inComponent: 0)
+            let value = selectedRow
+            text = "\(value)"
+            onValueSelected?(value)
+        } else if fieldState.usesDatePicker {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd.MM.yyyy"
+            text = formatter.string(from: datePicker.date)
+            onDateSelected?(datePicker.date)
+        }
         resignFirstResponder()
     }
     
     @objc private func editingDidBegin() {
-        if fieldState == .age && !isShowingDatePicker {
-            inputView = nil
-            inputAccessoryView = nil
-        }
+        isShowingDatePicker = fieldState.usesDatePicker
+                if fieldState == .name || fieldState == .writeSomething {
+                    inputView = nil
+                    inputAccessoryView = nil
+                }
     }
     
     @objc private func editingDidEnd() {
@@ -179,7 +200,23 @@ final class CommonTextField: UITextField {
     }
     
     @objc private func textDidChange(_ sender: UITextField) {
-        textDidChange?(sender.text ?? "")
+        if fieldState == .cycleDuration, let text = sender.text, let value = Int(text) {
+                    if value < 0 || value > 50 {
+                        sender.text = ""
+                        onValueSelected?(0)
+                    } else {
+                        onValueSelected?(value)
+                    }
+                } else if fieldState == .age, let text = sender.text, let value = Int(text) {
+                    if value < 10 {
+                        sender.text = ""
+                        textDidChange?("")
+                    } else {
+                        textDidChange?(text)
+                    }
+                } else {
+                    textDidChange?(sender.text ?? "")
+                }
     }
     
     override func textRect(forBounds bounds: CGRect) -> CGRect {
@@ -194,5 +231,26 @@ final class CommonTextField: UITextField {
         var rect = super.rightViewRect(forBounds: bounds)
         rect.origin.x -= 16
         return rect
+    }
+}
+
+// MARK: - UIPickerViewDelegate, UIPickerViewDataSource
+
+extension CommonTextField: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 51 // 0–50
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return "\(row)"
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        text = "\(row)"
+        onValueSelected?(row)
     }
 }

@@ -56,29 +56,53 @@ final class SignInCell: BaseCollectionCell {
         topTextField.layoutIfNeeded()
     }
     
+    override func prepareForReuse() {
+            super.prepareForReuse()
+            topTextField.text = nil
+            bottomTextField.text = nil
+            bottomTextField.isHidden = true
+            topTextFieldHandler = nil
+            bottomTextFieldHandler = nil
+            dateHandler = nil
+            index = nil
+        }
+    
     // MARK: - Configuration
     
     func configure(model: SignInCellModel, index: Int) {
         self.stepLabel.text = model.step
-        self.timeLineImage.image = model.timelineImage
-        self.titleLabel.text = model.title
-        self.bottomTextField.isHidden = model.id != 2
-        self.index = index
-        
-        switch index {
-        case 1:
-            topTextField.fieldState = .birthDate
-            topTextField.onDateSelected = { [weak self] date in
-                self?.dateHandler?(date, index)
-            }
-        case 2:
-            topTextField.fieldState = .cycleStartDate
-            topTextField.onDateSelected = { [weak self] date in
-                self?.dateHandler?(date, index)
-            }
-        default:
-            break
-        }
+                self.timeLineImage.image = model.timelineImage
+                self.titleLabel.text = model.title
+                self.index = index
+                
+                // Сбрасываем обработчики перед настройкой
+                topTextField.onDateSelected = nil
+                bottomTextField.onValueSelected = nil
+                
+                switch index {
+                case 0:
+                    topTextField.fieldState = .name
+                    bottomTextField.isHidden = true
+                case 1:
+                    topTextField.fieldState = .birthDate
+                    bottomTextField.isHidden = true
+                    topTextField.onDateSelected = { [weak self] date in
+                        self?.dateHandler?(date, index)
+                    }
+                case 2:
+                    topTextField.fieldState = .cycleStartDate
+                    bottomTextField.fieldState = .cycleDuration
+                    bottomTextField.isHidden = false
+                    topTextField.onDateSelected = { [weak self] date in
+                        self?.dateHandler?(date, index)
+                    }
+                    bottomTextField.onValueSelected = { [weak self] value in
+                        self?.bottomTextFieldHandler?("\(value)")
+                    }
+                default:
+                    topTextField.fieldState = .name
+                    bottomTextField.isHidden = true
+                }
     }
     
     // MARK: - Private Methods

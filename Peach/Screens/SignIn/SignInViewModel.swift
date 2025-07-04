@@ -46,6 +46,17 @@ final class SignInViewModelImpl: BaseViewModel, SignInViewModel {
         UserDefaults.standard.set(true, forKey: Config.userFirstLaunchKey.rawValue)
     }
     
+    private func validateAge(_ age: Int?) -> Bool {
+        guard let age = age, age >= 10 else {
+            output.send(.showAgeAlert(
+                title: AssetString.warning.text,
+                message: AssetString.age_restriction.text
+            ))
+            return false
+        }
+        return true
+    }
+    
     private func bind() {
         input.sink { [weak self] event in
             guard let self else { return }
@@ -54,49 +65,69 @@ final class SignInViewModelImpl: BaseViewModel, SignInViewModel {
             case .fillFromTopTF(let text, let index):
                 switch index {
                 case 0:
-                    self.userModel.value?.name = text
+                    userModel.value?.name = text
                 case 1:
-                    // Обработка ввода возраста вручную (если пользователь вводит текст)
-                    if let age = Int(text) {
-                        self.userModel.value?.age = age
+                    if let age = Int(text), validateAge(age) {
+                        userModel.value?.age = age
                     } else {
-                        self.userModel.value?.age = nil
+                        userModel.value?.age = nil
                     }
                 default:
                     break
                 }
-                
+            case .fillFromBottomTF(let text):
+                if let duration = Int(text), duration >= 0, duration <= 50 {
+                    userModel.value?.cycle_duration = duration
+                } else {
+                    userModel.value?.cycle_duration = nil
+                    output.send(.showAlert)
+                }
             case .setDate(let date, let index):
                 let age = Calendar.current.dateComponents([.year], from: date, to: Date()).year ?? 0
                 if index == 1 {
-                    if age < 10 {
-                        self.userModel.send(UserModel())
-                        self.output.send(.showAgeAlert(
-                            title: AssetString.warning.text,
-                            message: AssetString.age_restriction.text
-                        ))
-                    } else {
-                        var updatedUser = self.userModel.value ?? UserModel()
+                    if validateAge(age) {
+                        var updatedUser = userModel.value ?? UserModel()
                         updatedUser.birthDate = date
                         updatedUser.age = age
-                        self.userModel.send(updatedUser)
+                        userModel.send(updatedUser)
+                    } else {
+                        userModel.send(UserModel())
                     }
                 } else if index == 2 {
-                    var updatedUser = self.userModel.value ?? UserModel()
+                    var updatedUser = userModel.value ?? UserModel()
                     updatedUser.start_cycle_date = date
-                    self.userModel.send(updatedUser)
+                    userModel.send(updatedUser)
                 }
-                
-            case .fillFromBottomTF(let text):
-                self.userModel.value?.cycle_duration = Int(text) ?? 0
-                
             case .saveModel:
-                self.saveUser(model: self.userModel.value) {
-                    self.output.send(.dismiss)
-                }
+                print("=== Проверка userModel перед сохранением ===")
+                print("Имя: \(userModel.value?.name ?? "не указано")")
+                print("Возраст: \(userModel.value?.age.map(String.init) ?? "не указан")")
+                print("Дата рождения: \(userModel.value?.birthDate?.description ?? "не указана")")
+                print("Дата цикла: \(userModel.value?.start_cycle_date?.description ?? "не указана")")
+                print("Длительность цикла: \(userModel.value?.cycle_duration.map(String.init) ?? "не указана")")
+                print("==================================")
                 
+                if let user = userModel.value,
+                   !(user.name?.isEmpty ?? true),
+                   user.age != nil,
+                   user.birthDate != nil,
+                   user.start_cycle_date != nil,
+                   user.cycle_duration != nil {
+                    saveUser(model: user) {
+                        print("=== Сохраненные данные UserModel ===")
+                        print("Имя: \(self.userModel.value?.name ?? "не указано")")
+                        print("Возраст: \(self.userModel.value?.age.map(String.init) ?? "не указан")")
+                        print("Дата рождения: \(self.userModel.value?.birthDate?.description ?? "не указана")")
+                        print("Дата цикла: \(self.userModel.value?.start_cycle_date?.description ?? "не указана")")
+                        print("Длительность цикла: \(self.userModel.value?.cycle_duration ?? 0)")
+                        print("==================================")
+                        self.output.send(.dismiss)
+                    }
+                } else {
+                    output.send(.showAlert)
+                }
             case .showAlert:
-                self.output.send(.showAlert)
+                output.send(.showAlert)
             }
         }.store(in: &cancellables)
     }
@@ -112,27 +143,26 @@ final class SignInViewModelImpl: BaseViewModel, SignInViewModel {
             if (userModel.value?.name ?? "").isEmpty {
                 output.send(.showAlert)
                 return false
-            } else {
-                nextIndex += 1
-                return true
             }
+            nextIndex += 1
+            return true
         case 2:
             guard let age = userModel.value?.age else {
                 output.send(.showInvalidAgeAlert)
                 return false
             }
-            
-            if age < 10 {
-                self.userModel.send(UserModel())
-                output.send(.showAgeAlert(
-                    title: AssetString.warning.text,
-                    message: AssetString.age_restriction.text
-                ))
-                return false
-            } else {
+            if validateAge(age) {
                 nextIndex += 1
                 return true
             }
+            return false
+        case 3:
+            guard let startCycleDate = userModel.value?.start_cycle_date,
+                  let cycleDuration = userModel.value?.cycle_duration else {
+                output.send(.showAlert)
+                return false
+            }
+            return true
         default:
             return false
         }
