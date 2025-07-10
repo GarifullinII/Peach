@@ -47,6 +47,15 @@ final class CommonTextField: UITextField {
             }
         }
         
+        var iconSize: CGSize {
+            switch self {
+            case .age, .birthDate, .cycleStartDate, .cycleDuration:
+                return CGSize(width: 40, height: 30)
+            default:
+                return .zero
+            }
+        }
+        
         var usesDatePicker: Bool {
             return self == .birthDate || self == .cycleStartDate
         }
@@ -138,7 +147,11 @@ final class CommonTextField: UITextField {
                     button.setImage(icon, for: .normal)
                     button.addTarget(self, action: #selector(iconTapped), for: .touchUpInside)
                     
-                    let container = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
+                    let iconSize = fieldState.iconSize
+                    let container = UIView(frame: CGRect(
+                        origin: .zero,
+                        size: iconSize
+                    ))
                     button.frame = container.bounds
                     container.addSubview(button)
                     
