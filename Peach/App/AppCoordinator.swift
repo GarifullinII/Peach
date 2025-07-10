@@ -47,13 +47,16 @@ final class AppCoordinator: BaseCoordinator {
         let navigationController = UINavigationController()
         let router = RouterImpl(navigationController: navigationController)
         let coordinator = MainCoordinator(router: router)
+        
+        var retainedCoordinator: MainCoordinator? = coordinator
 
-        cancellable = coordinator.output.sink { [weak self, weak coordinator] output in
+        cancellable = coordinator.output.sink { [weak self] output in
             guard let self else { return }
 
             switch output {
             case .dismiss:
-                self.removeDependency(coordinator)
+                self.removeDependency(retainedCoordinator)
+                retainedCoordinator = nil
                 DispatchQueue.main.async {
                     self.showSignIn()
                 }
@@ -69,13 +72,16 @@ final class AppCoordinator: BaseCoordinator {
         let navigationController = UINavigationController()
         let router = RouterImpl(navigationController: navigationController)
         let coordinator = OnboardingCoordinator(router: router)
+        
+        var retainedCoordinator: OnboardingCoordinator? = coordinator
 
-        cancellable = coordinator.output.sink { [weak self, weak coordinator] output in
+        cancellable = coordinator.output.sink { [weak self] output in
             guard let self else { return }
 
             switch output {
             case .dismiss:
-                self.removeDependency(coordinator)
+                self.removeDependency(retainedCoordinator)
+                retainedCoordinator = nil
                 DispatchQueue.main.async {
                     self.showMain()
                 }
@@ -91,13 +97,16 @@ final class AppCoordinator: BaseCoordinator {
         let navigationController = UINavigationController()
         let router = RouterImpl(navigationController: navigationController)
         let coordinator = SignInCoordinator(router: router)
+        
+        var retainedCoordinator: SignInCoordinator? = coordinator
 
-        cancellable = coordinator.output.sink { [weak self, weak coordinator] output in
+        cancellable = coordinator.output.sink { [weak self] output in
             guard let self else { return }
 
             switch output {
             case .dismiss:
-                self.removeDependency(coordinator)
+                self.removeDependency(retainedCoordinator)
+                retainedCoordinator = nil
                 DispatchQueue.main.async {
                     self.showMain()
                 }
