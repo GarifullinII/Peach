@@ -48,13 +48,19 @@ final class SymptomsManager {
     }
 
     func remove(date: Date) {
-        if let index = symptoms.firstIndex(where: { $0.date == date }) {
-            symptoms.remove(at: index)
-        }
+//        if let index = symptoms.firstIndex(where: { $0.date == date }) {
+//            symptoms.remove(at: index)
+//        }
+        
+        if let index = symptoms.firstIndex(where: { Calendar.current.isDate($0.date, inSameDayAs: date) }) {
+                    symptoms.remove(at: index)
+                }
     }
 
     func contains(date: Date) -> Bool {
-        return symptoms.contains(where: { $0.date == date })
+//        return symptoms.contains(where: { $0.date == date })
+        
+        return symptoms.contains(where: { Calendar.current.isDate($0.date, inSameDayAs: date) })
     }
 
     private func loadSymptoms() -> [Symptoms] {

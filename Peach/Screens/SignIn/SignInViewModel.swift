@@ -91,7 +91,11 @@ final class SignInViewModelImpl: BaseViewModel, SignInViewModel {
                         updatedUser.age = age
                         userModel.send(updatedUser)
                     } else {
-                        userModel.send(UserModel())
+//                        userModel.send(UserModel())
+                        var updatedUser = userModel.value ?? UserModel()
+                        updatedUser.birthDate = nil
+                        updatedUser.age = nil
+                        userModel.send(updatedUser)
                     }
                 } else if index == 2 {
                     var updatedUser = userModel.value ?? UserModel()
