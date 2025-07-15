@@ -20,7 +20,12 @@ final class SymptomsView: BaseContentView<SymptomsViewModelImpl> {
         layout.minimumLineSpacing = 6
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         layout.sectionInset = UIEdgeInsets(top: 15, left: 0, bottom: 15, right: 0)
-        layout.headerReferenceSize = CGSize(width: frame.size.width, height: 40)
+        //        layout.headerReferenceSize = CGSize(width: frame.size.width, height: 40)
+        
+        // Проверяем валидность ширины frame
+        let frameWidth = frame.size.width
+        let headerWidth = frameWidth.isFinite && !frameWidth.isNaN && frameWidth > 0 ? frameWidth : 375
+        layout.headerReferenceSize = CGSize(width: headerWidth, height: 40)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false

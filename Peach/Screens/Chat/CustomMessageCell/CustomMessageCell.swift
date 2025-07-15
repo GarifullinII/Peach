@@ -9,9 +9,9 @@ import MessageKit
 import UIKit
 
 class CustomMessageCell: CustomMessageContentCell {
-
+    
     // MARK: - Properties
-
+    
     /// The label used to display the message's text.
     var messageLabel: UILabel = {
         let label = UILabel()
@@ -19,20 +19,20 @@ class CustomMessageCell: CustomMessageContentCell {
         label.font = UIFont.preferredFont(forTextStyle: .body)
         return label
     }()
-
+    
     override func prepareForReuse() {
         super.prepareForReuse()
-
+        
         messageLabel.attributedText = nil
         messageLabel.text = nil
     }
-
+    
     override func setupSubviews() {
         super.setupSubviews()
-
+        
         messageContainerView.addSubview(messageLabel)
     }
-
+    
     override func configure(
         with message: MessageType,
         at indexPath: IndexPath,
@@ -46,17 +46,28 @@ class CustomMessageCell: CustomMessageContentCell {
             in: messagesCollectionView,
             dataSource: dataSource,
             and: sizeCalculator)
-
+        
         guard let displayDelegate = messagesCollectionView.messagesDisplayDelegate else {
             return
         }
-
+        
         let calculator = sizeCalculator as? LayoutCalculator
         
-        messageLabel.frame = calculator?.messageLabelFrame(
+        //        messageLabel.frame = calculator?.messageLabelFrame(
+        let labelFrame = calculator?.messageLabelFrame(
             for: message,
             at: indexPath) ?? .zero
-
+        
+        // Проверяем валидность frame перед установкой
+        if labelFrame.width.isFinite && labelFrame.height.isFinite &&
+            !labelFrame.width.isNaN && !labelFrame.height.isNaN &&
+            labelFrame.width >= 0 && labelFrame.height >= 0 {
+            messageLabel.frame = labelFrame
+        } else {
+            print("⚠️ Warning: Invalid frame calculated for messageLabel: \(labelFrame)")
+            messageLabel.frame = CGRect(x: 8, y: 8, width: 100, height: 20)
+        }
+        
         switch message.kind {
         case .text(let text):
             let textColor = displayDelegate.textColor(for: message, at: indexPath, in: messagesCollectionView)
