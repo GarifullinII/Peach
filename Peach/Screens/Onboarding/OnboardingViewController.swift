@@ -9,12 +9,12 @@ import UIKit
 
 final class OnboardingViewController
 <View: OnboardingView>: BaseViewController<View>, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-
+    
     // MARK: - Properties
-
+    
     private lazy var continueHandler = { (index: Int) in
         let range = 0..<self.contentView.viewModel.onboadings.value.count - 1
-
+        
         if range.contains(index) {
             self.contentView.collectionView.scrollToItem(
                 at: [0, index + 1],
@@ -24,46 +24,46 @@ final class OnboardingViewController
             self.contentView.viewModel.input.send(.signIn)
         }
     }
-
+    
     // MARK: - Lifecycle
-
+    
     override func loadView() {
         super.loadView()
-
+        
         navigationController?.isNavigationBarHidden = true
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         subscribeDelegates()
         contentViewAction()
     }
-
+    
     deinit {
         print("❌Deinit:", String(describing: self))
     }
-
+    
     // MARK: - Instance methods
-
+    
     private func subscribeDelegates() {
         contentView.collectionView.dataSource = self
         contentView.collectionView.delegate = self
     }
-
+    
     private func contentViewAction() {
         contentView.skipHandler = { [weak self] in
             self?.contentView.viewModel.input.send(.signIn)
         }
     }
-
+    
     // MARK: - UICollectionViewDataSource methods
-
+    
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         return contentView.viewModel.onboadings.value.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueCell(withType: OnboardingCell.self, for: indexPath)
@@ -72,12 +72,24 @@ final class OnboardingViewController
         cell.continueHandler = continueHandler
         return cell
     }
-
+    
     // MARK: - UICollectionViewDelegateFlowLayout methods
-
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: contentView.frame.width, height: contentView.frame.height)
+        //        return CGSize(width: contentView.frame.width, height: contentView.frame.height)
+        
+        let width = contentView.frame.width
+        let height = contentView.frame.height
+        
+        // Проверяем валидность размеров contentView
+        guard width.isFinite && !width.isNaN && width > 0 &&
+                height.isFinite && !height.isNaN && height > 0 else {
+            print("⚠️ Warning: Invalid contentView frame in OnboardingViewController - width: \(width), height: \(height)")
+            return CGSize(width: 375, height: 667) // Безопасные размеры по умолчанию
+        }
+        
+        return CGSize(width: width, height: height)
     }
 }

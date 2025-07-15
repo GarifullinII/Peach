@@ -181,6 +181,16 @@ final class SignInViewController
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        return CGSize(width: contentView.frame.width, height: 300)
+        //        return CGSize(width: contentView.frame.width, height: 300)
+        
+        let width = contentView.frame.width
+        
+        // Проверяем валидность ширины contentView
+        guard width.isFinite && !width.isNaN && width > 0 else {
+            print("⚠️ Warning: Invalid contentView frame width in SignInViewController: \(width)")
+            return CGSize(width: 375, height: 300) // Безопасная ширина по умолчанию
+        }
+        
+        return CGSize(width: width, height: 300)
     }
 }
