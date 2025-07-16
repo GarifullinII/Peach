@@ -16,6 +16,8 @@ struct DayCell: View {
     var cellWidth: CGFloat
 
     var body: some View {
+        let safeCornerRadius = cellWidth.isFinite && !cellWidth.isNaN && cellWidth > 0 ? cellWidth/2 : 15
+        
         switch day.state {
         case .isMenstrual:
             if day.isSelected {
@@ -27,9 +29,11 @@ struct DayCell: View {
                             .foregroundColor(day.getTextColor())
                             .font(.system(size: 12))
                             .background(day.getBackgroundColor())
-                            .cornerRadius(cellWidth/2)
+//                            .cornerRadius(cellWidth/2)
+                            .cornerRadius(safeCornerRadius)
                             .overlay(
-                                RoundedRectangle(cornerRadius: (cellWidth/2))
+//                                RoundedRectangle(cornerRadius: (cellWidth/2))
+                                RoundedRectangle(cornerRadius: safeCornerRadius)
                                     .stroke(Color.mainGray, lineWidth: 3)
                             )
                         Circle()
@@ -44,9 +48,11 @@ struct DayCell: View {
                         .foregroundColor(day.getTextColor())
                         .font(.system(size: 12))
                         .background(day.getBackgroundColor())
-                        .cornerRadius(cellWidth/2)
+//                        .cornerRadius(cellWidth/2)
+                        .cornerRadius(safeCornerRadius)
                         .overlay(
-                            RoundedRectangle(cornerRadius: (cellWidth/2))
+//                            RoundedRectangle(cornerRadius: (cellWidth/2))
+                            RoundedRectangle(cornerRadius: safeCornerRadius)
                                 .stroke(Color.mainGray, lineWidth: 3)
                         )
                 }
@@ -59,7 +65,9 @@ struct DayCell: View {
                             .foregroundColor(day.getTextColor())
                             .font(.system(size: 12))
                             .background(day.getBackgroundColor())
-                            .cornerRadius(cellWidth/2)
+//                            .cornerRadius(cellWidth/2)
+                            .cornerRadius(safeCornerRadius)
+                        
                         Circle()
                             .frame(width: 4, height: 4)
                             .foregroundColor(.white)
@@ -72,7 +80,8 @@ struct DayCell: View {
                         .foregroundColor(day.getTextColor())
                         .font(.system(size: 12))
                         .background(day.getBackgroundColor())
-                        .cornerRadius(cellWidth/2)
+//                        .cornerRadius(cellWidth/2)
+                        .cornerRadius(safeCornerRadius)
                 }
             }
         case .isOvulation:
@@ -84,11 +93,16 @@ struct DayCell: View {
                         .foregroundColor(day.getTextColor())
                         .font(.system(size: 12))
                         .background(day.getBackgroundColor())
-                        .cornerRadius(cellWidth/2)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: cellWidth/2)
-                                .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [1]))
-                        )
+//                        .cornerRadius(cellWidth/2)
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: cellWidth/2)
+//                                .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [1]))
+//                        )
+                        .cornerRadius(safeCornerRadius)
+                                                 .overlay(
+                                                     RoundedRectangle(cornerRadius: safeCornerRadius)
+                                                         .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [1]))
+                                                 )
                     Circle()
                         .foregroundColor(.dotGray)
                         .frame(width: 4, height: 4)
@@ -101,11 +115,16 @@ struct DayCell: View {
                     .foregroundColor(day.getTextColor())
                     .font(.system(size: 12))
                     .background(day.getBackgroundColor())
-                    .cornerRadius(cellWidth/2)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cellWidth/2)
-                            .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [1]))
-                    )
+//                    .cornerRadius(cellWidth/2)
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: cellWidth/2)
+//                            .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [1]))
+//                    )
+                    .cornerRadius(safeCornerRadius)
+                                         .overlay(
+                                             RoundedRectangle(cornerRadius: safeCornerRadius)
+                                                 .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [1]))
+                                         )
             }
         case .isMenstruationForecast:
             if isSymptomsContains() {
@@ -116,12 +135,18 @@ struct DayCell: View {
                         .foregroundColor(day.getTextColor())
                         .font(.system(size: 12))
                         .background(day.getBackgroundColor())
-                        .cornerRadius(cellWidth/2)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: cellWidth/2)
-                                .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [1]))
-                                .foregroundColor(.mainPink)
-                        )
+//                        .cornerRadius(cellWidth/2)
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: cellWidth/2)
+//                                .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [1]))
+//                                .foregroundColor(.mainPink)
+//                        )
+                        .cornerRadius(safeCornerRadius)
+                                                 .overlay(
+                                                     RoundedRectangle(cornerRadius: safeCornerRadius)
+                                                         .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [1]))
+                                                         .foregroundColor(.mainPink)
+                                                 )
                     Circle()
                         .foregroundColor(.dotGray)
                         .frame(width: 4, height: 4)
@@ -135,12 +160,18 @@ struct DayCell: View {
                     .foregroundColor(day.getTextColor())
                     .font(.system(size: 12))
                     .background(day.getBackgroundColor())
-                    .cornerRadius(cellWidth/2)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cellWidth/2)
-                            .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [1]))
-                            .foregroundColor(.mainPink)
-                    )
+//                    .cornerRadius(cellWidth/2)
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: cellWidth/2)
+//                            .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [1]))
+//                            .foregroundColor(.mainPink)
+//                    )
+                    .cornerRadius(safeCornerRadius)
+                                             .overlay(
+                                                 RoundedRectangle(cornerRadius: safeCornerRadius)
+                                                     .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [1]))
+                                                     .foregroundColor(.mainPink)
+                                             )
             }
         case .default:
             if day.isSelected {
@@ -152,7 +183,8 @@ struct DayCell: View {
                             .foregroundColor(day.getTextColor())
                             .font(.system(size: 12))
                             .background(Color.mainGray)
-                            .cornerRadius(cellWidth/2)
+//                            .cornerRadius(cellWidth/2)
+                            .cornerRadius(safeCornerRadius)
                         Circle()
                             .foregroundColor(.dotGray)
                             .frame(width: 4, height: 4)
@@ -165,7 +197,8 @@ struct DayCell: View {
                         .foregroundColor(day.getTextColor())
                         .font(.system(size: 12))
                         .background(Color.mainGray)
-                        .cornerRadius(cellWidth/2)
+//                        .cornerRadius(cellWidth/2)
+                        .cornerRadius(safeCornerRadius)
                 }
             } else {
                 if isSymptomsContains() {
@@ -176,7 +209,8 @@ struct DayCell: View {
                             .foregroundColor(day.getTextColor())
                             .font(.system(size: 12))
                             .background(day.getBackgroundColor())
-                            .cornerRadius(cellWidth/2)
+//                            .cornerRadius(cellWidth/2)
+                            .cornerRadius(safeCornerRadius)
                         Circle()
                             .frame(width: 4, height: 4)
                             .foregroundColor(.dotGray)
@@ -189,7 +223,8 @@ struct DayCell: View {
                         .foregroundColor(day.getTextColor())
                         .font(.system(size: 12))
                         .background(day.getBackgroundColor())
-                        .cornerRadius(cellWidth/2)
+//                        .cornerRadius(cellWidth/2)
+                        .cornerRadius(safeCornerRadius)
                 }
             }
         }
