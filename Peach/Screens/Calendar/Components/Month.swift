@@ -155,7 +155,14 @@ struct Month: View {
         let firstOfMonth = firstOfMonthForOffset()
         let rangeOfWeeks = manager.calendar.range(of: .weekOfMonth, in: .month, for: firstOfMonth)
 
-        return (rangeOfWeeks?.count)! * daysPerWeek
+//        return (rangeOfWeeks?.count)! * daysPerWeek
+        
+        guard let weekCount = rangeOfWeeks?.count, weekCount > 0 else {
+                    print("Warning: Invalid range of weeks for month, using default value")
+                    return 42 // 6 weeks * 7 days - safe default
+                }
+                
+                return weekCount * daysPerWeek
     }
 
     func firstOfMonthForOffset() -> Date {
