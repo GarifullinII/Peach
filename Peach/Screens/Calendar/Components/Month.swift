@@ -8,25 +8,25 @@
 import SwiftUI
 
 struct Month: View {
-
+    
     // MARK: - Properties
-
+    
     @ObservedObject var manager: CalendarManager
-
+    
     @EnvironmentObject var viewModel: CalendarViewModel
-
+    
     var monthsArray: [[Date]] {
         monthArray()
     }
-
+    
     let monthOffset: Int
-
+    
     private let calendarUnitYMD = Set<Calendar.Component>([.year, .month, .day])
-
+    
     private let daysPerWeek = 7
-
+    
     private let cellWidth = CGFloat(32)
-
+    
     var body: some View {
         VStack(alignment: HorizontalAlignment.center, spacing: 10){
             Text(getMonthHeader()).foregroundColor(.black)
@@ -44,15 +44,18 @@ struct Month: View {
                             HStack() {
                                 Spacer()
                                 if self.isThisMonth(date: column) {
-                                    // пофиксить этот бред!
+                                    
+                                    let dayModel = self.getDayModel(date: column)
                                     DayCell(day: DayModel(
-                                        date: column,
-                                        isMenstrual: self.getDayModel(date: column).isMenstrual,
-                                        isOvulation: self.getDayModel(date: column).isOvulation,
-                                        isMenstrualForecast: self.getDayModel(date: column).isMenstrualForecast,
+                                        date: dayModel.date,
+                                        isMenstrual: dayModel.isMenstrual,
+                                        isOvulation: dayModel.isOvulation,
+                                        isMenstrualForecast: dayModel.isMenstrualForecast,
+                                        isDefault: dayModel.isDefault,
                                         isSelected: self.isSelected(date: column),
+                                        cycleDayCount: dayModel.cycleDayCount,
                                         symptoms: self.getSymptoms(date: column)),
-                                         cellWidth: cellWidth)
+                                            cellWidth: cellWidth)
                                     .onTapGesture {
                                         self.dateTapped(date: column)
                                     }
@@ -69,9 +72,9 @@ struct Month: View {
             .frame(minWidth: 0, maxWidth: .infinity)
         }
     }
-
+    
     // MARK: -
-
+    
     func dateTapped(date: Date) {
         manager.selectDate = manager.selectDate == date ? nil : date
         viewModel.changeView(
@@ -83,39 +86,39 @@ struct Month: View {
             notificationGenerator.notificationOccurred(.success)
         }
     }
-
+    
     func isSelected(date: Date) -> Bool {
         return manager.calendar.isDate(date, inSameDayAs: manager.selectDate ?? Date())
     }
-
+    
     func makeDefaultDay() {
         if viewModel.selectedDay == nil {
             viewModel.changeView(selectedDay: self.getDayModel(date: Date()))
             manager.selectDate = Date()
         }
     }
-
+    
     func getDayModel(date: Date) -> DayModel {
         let components = Calendar.current.dateComponents([.day, .month, .year], from: date)
         return manager.dayModelDataSource.first(
             where: { $0.dateComponents == components }
         ) ?? DayModel(date: Date())
     }
-
+    
     func getSymptoms(date: Date) -> Symptoms? {
         return SymptomsManager.shared.get(date: date)
     }
-
+    
     // MARK: - Instance methods
-
-     func isThisMonth(date: Date) -> Bool {
-         return self.manager.calendar.isDate(
+    
+    func isThisMonth(date: Date) -> Bool {
+        return self.manager.calendar.isDate(
             date,
             equalTo: firstOfMonthForOffset(),
             toGranularity: .month
-         )
-     }
-
+        )
+    }
+    
     func monthArray() -> [[Date]] {
         var rowArray = [[Date]]()
         for row in 0 ..< (numberOfDays(offset: monthOffset) / 7) {
@@ -128,7 +131,7 @@ struct Month: View {
         }
         return rowArray
     }
-
+    
     func getMonthHeader() -> String {
         let headerDateFormatter = DateFormatter()
         headerDateFormatter.calendar = manager.calendar
@@ -136,10 +139,10 @@ struct Month: View {
             fromTemplate: "MMMM",
             options: 0, locale: manager.calendar.locale
         )
-
+        
         return headerDateFormatter.string(from: firstOfMonthForOffset()).capitalized
     }
-
+    
     func getDateAtIndex(index: Int) -> Date {
         let firstOfMonth = firstOfMonthForOffset()
         let weekday = manager.calendar.component(.weekday, from: firstOfMonth)
@@ -147,66 +150,66 @@ struct Month: View {
         startOffset += startOffset >= 0 ? 0 : daysPerWeek
         var dateComponents = DateComponents()
         dateComponents.day = index - startOffset
-
+        
         return manager.calendar.date(byAdding: dateComponents, to: firstOfMonth)!
     }
-
+    
     func numberOfDays(offset : Int) -> Int {
         let firstOfMonth = firstOfMonthForOffset()
         let rangeOfWeeks = manager.calendar.range(of: .weekOfMonth, in: .month, for: firstOfMonth)
-
-//        return (rangeOfWeeks?.count)! * daysPerWeek
+        
+        //        return (rangeOfWeeks?.count)! * daysPerWeek
         
         guard let weekCount = rangeOfWeeks?.count, weekCount > 0 else {
-                    print("Warning: Invalid range of weeks for month, using default value")
-                    return 42 // 6 weeks * 7 days - safe default
-                }
-                
-                return weekCount * daysPerWeek
+            print("Warning: Invalid range of weeks for month, using default value")
+            return 42 // 6 weeks * 7 days - safe default
+        }
+        
+        return weekCount * daysPerWeek
     }
-
+    
     func firstOfMonthForOffset() -> Date {
         var offset = DateComponents()
         offset.month = monthOffset
-
+        
         return manager.calendar.date(byAdding: offset, to: firstDateMonth())!
     }
-
+    
     func formatDate(date: Date) -> Date {
         let components = manager.calendar.dateComponents(calendarUnitYMD, from: date)
-
+        
         return manager.calendar.date(from: components)!
     }
-
+    
     func formatAndCompareDate(date: Date, referenceDate: Date) -> Bool {
         let refDate = formatDate(date: referenceDate)
         let clampedDate = formatDate(date: date)
         return refDate == clampedDate
     }
-
+    
     func firstDateMonth() -> Date {
         var components = manager.calendar.dateComponents(calendarUnitYMD, from: manager.minimumDate)
         components.day = 1
-
+        
         return manager.calendar.date(from: components)!
     }
-
+    
     // MARK: - Date Property Checkers
-
+    
     func isStartDate(date: Date) -> Bool {
         if manager.startDate == nil {
             return false
         }
         return formatAndCompareDate(date: date, referenceDate: manager.startDate)
     }
-
+    
     func isEndDate(date: Date) -> Bool {
         if manager.endDate == nil {
             return false
         }
         return formatAndCompareDate(date: date, referenceDate: manager.endDate)
     }
-
+    
     func isBetweenStartAndEnd(date: Date) -> Bool {
         if manager.startDate == nil {
             return false
@@ -219,7 +222,7 @@ struct Month: View {
         }
         return true
     }
-
+    
     func isStartDateAfterEndDate() -> Bool {
         if manager.startDate == nil {
             return false
