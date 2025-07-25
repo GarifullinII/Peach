@@ -31,7 +31,6 @@ struct ViewController: View {
                 }
                 .listStyle(.plain)
                 .scrollIndicators(.hidden)
-                .opacity(viewModel.isModelAreRefreshing ? 0.5 : 1)
 
                 if viewModel.isModelAreRefreshing {
                     VStack {
@@ -50,8 +49,8 @@ struct ViewController: View {
                             .cornerRadius(16)
 
                             Button {
-                                print(1)
-                                // update data and model
+                                // Сохранение - при изменении Даты месячных
+                                viewModel.savePeriodDateChanges()
                             } label:
                             { Text(AssetString.save.text)
                                     .frame( maxWidth: .infinity, alignment: .center)

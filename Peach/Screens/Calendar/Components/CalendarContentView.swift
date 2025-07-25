@@ -8,17 +8,21 @@
 import SwiftUI
 
 struct CalendarContentView : View {
-
+    
     // MARK: - Properties
-
+    
     @EnvironmentObject var viewModel: CalendarViewModel
-
+    
     var calendarManager = CalendarManager()
-
+    
     var body: some View {
         VStack {
             ViewController(manager: self.calendarManager)
                 .navigationBarHidden(true)
+        }
+        .onAppear {
+            // Устанавливаем связь между CalendarViewModel и CalendarManager
+            viewModel.calendarManager = calendarManager
         }
     }
 }

@@ -118,7 +118,8 @@ final class CalendarManager: ObservableObject {
     }
 }
 
-    // создаем массив с диапазоном дат
+
+// создаем массив с диапазоном дат
 //    func createPeriodDays(from startDate: Date, byAdding component: Calendar.Component, count: Int) -> [Day] {
 //        var dates: [Day] = []
 //        var currentDate = startDate
