@@ -87,13 +87,13 @@ final class SignInViewModelImpl: BaseViewModel, SignInViewModel {
                 if index == 1 {
                     if validateAge(age) {
                         var updatedUser = userModel.value ?? UserModel()
-                        updatedUser.birthDate = date
+                        updatedUser.birth_date = date
                         updatedUser.age = age
                         userModel.send(updatedUser)
                     } else {
 //                        userModel.send(UserModel())
                         var updatedUser = userModel.value ?? UserModel()
-                        updatedUser.birthDate = nil
+                        updatedUser.birth_date = nil
                         updatedUser.age = nil
                         userModel.send(updatedUser)
                     }
@@ -106,7 +106,7 @@ final class SignInViewModelImpl: BaseViewModel, SignInViewModel {
                 print("=== Проверка userModel перед сохранением ===")
                 print("Имя: \(userModel.value?.name ?? "не указано")")
                 print("Возраст: \(userModel.value?.age.map(String.init) ?? "не указан")")
-                print("Дата рождения: \(userModel.value?.birthDate?.description ?? "не указана")")
+                print("Дата рождения: \(userModel.value?.birth_date?.description ?? "не указана")")
                 print("Дата цикла: \(userModel.value?.start_cycle_date?.description ?? "не указана")")
                 print("Длительность цикла: \(userModel.value?.cycle_duration.map(String.init) ?? "не указана")")
                 print("==================================")
@@ -114,14 +114,14 @@ final class SignInViewModelImpl: BaseViewModel, SignInViewModel {
                 if let user = userModel.value,
                    !(user.name?.isEmpty ?? true),
                    user.age != nil,
-                   user.birthDate != nil,
+                   user.birth_date != nil,
                    user.start_cycle_date != nil,
                    user.cycle_duration != nil {
                     saveUser(model: user) {
                         print("=== Сохраненные данные UserModel ===")
                         print("Имя: \(self.userModel.value?.name ?? "не указано")")
                         print("Возраст: \(self.userModel.value?.age.map(String.init) ?? "не указан")")
-                        print("Дата рождения: \(self.userModel.value?.birthDate?.description ?? "не указана")")
+                        print("Дата рождения: \(self.userModel.value?.birth_date?.description ?? "не указана")")
                         print("Дата цикла: \(self.userModel.value?.start_cycle_date?.description ?? "не указана")")
                         print("Длительность цикла: \(self.userModel.value?.cycle_duration ?? 0)")
                         print("==================================")

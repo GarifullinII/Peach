@@ -47,7 +47,7 @@ struct Month: View {
                                     
                                     let dayModel = self.getDayModel(date: column)
                                     DayCell(day: DayModel(
-                                        date: dayModel.date,
+                                        date: column,
                                         isMenstrual: dayModel.isMenstrual,
                                         isOvulation: dayModel.isOvulation,
                                         isMenstrualForecast: dayModel.isMenstrualForecast,

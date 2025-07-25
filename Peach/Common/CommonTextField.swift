@@ -138,45 +138,58 @@ final class CommonTextField: UITextField {
     
     private func configure() {
         placeholder = fieldState.placeholderText
-                keyboardType = fieldState.keyboardType
+        keyboardType = fieldState.keyboardType
+        inputView = nil
+        inputAccessoryView = nil
+        
+        if let icon = fieldState.rightIcon {
+            let button = UIButton(type: .custom)
+            button.setImage(icon, for: .normal)
+            button.addTarget(self, action: #selector(iconTapped), for: .touchUpInside)
+            
+            let iconSize = fieldState.iconSize
+            let container = UIView(frame: CGRect(
+                origin: .zero,
+                size: iconSize
+            ))
+            button.frame = container.bounds
+            container.addSubview(button)
+            
+            rightView = container
+            rightViewMode = .always
+            
+            if fieldState.usesDatePicker {
+                inputView = datePicker
+                inputAccessoryView = toolbar
+            } else if fieldState == .cycleDuration {
+                inputView = pickerView
+                inputAccessoryView = toolbar
+            } else if fieldState == .age {
                 inputView = nil
-                inputAccessoryView = nil
-                
-                if let icon = fieldState.rightIcon {
-                    let button = UIButton(type: .custom)
-                    button.setImage(icon, for: .normal)
-                    button.addTarget(self, action: #selector(iconTapped), for: .touchUpInside)
-                    
-                    let iconSize = fieldState.iconSize
-                    let container = UIView(frame: CGRect(
-                        origin: .zero,
-                        size: iconSize
-                    ))
-                    button.frame = container.bounds
-                    container.addSubview(button)
-                    
-                    rightView = container
-                    rightViewMode = .always
-                    
-                    if fieldState.usesDatePicker {
-                        inputView = datePicker
-                        inputAccessoryView = toolbar
-                    } else if fieldState == .cycleDuration {
-                        inputView = pickerView
-                        inputAccessoryView = toolbar
-                    } else if fieldState == .age {
-                        inputView = nil
-                        inputAccessoryView = toolbar
-                    }
-                } else {
-                    rightView = nil
-                    rightViewMode = .never
-                }
-                
-                if fieldState == .cycleStartDate {
-                    let calendar = Calendar.current
-                    datePicker.minimumDate = calendar.date(byAdding: .day, value: -365, to: Date())
-                }
+                inputAccessoryView = toolbar
+            }
+        } else {
+            rightView = nil
+            rightViewMode = .never
+        }
+        
+        // Настраиваем ограничения datePicker в зависимости от типа поля
+        let calendar = Calendar.current
+        if fieldState == .cycleStartDate {
+            //                    let calendar = Calendar.current
+            //                    datePicker.minimumDate = calendar.date(byAdding: .day, value: -365, to: Date())
+            // Разрешаем выбор дат в прошлом (до года назад) и в будущем (до года вперед)
+            datePicker.minimumDate = calendar.date(byAdding: .year, value: -1, to: Date())
+            datePicker.maximumDate = calendar.date(byAdding: .year, value: 1, to: Date())
+        } else if fieldState == .birthDate {
+            // Для даты рождения ограничиваем максимальную дату текущей датой
+            var components = DateComponents()
+            components.year = 1925
+            components.month = 7
+            components.day = 1
+            datePicker.minimumDate = calendar.date(from: components)
+            datePicker.maximumDate = Date()
+        }
     }
     
     @objc private func iconTapped() {
@@ -195,17 +208,32 @@ final class CommonTextField: UITextField {
             let formatter = DateFormatter()
             formatter.dateFormat = "dd.MM.yyyy"
             text = formatter.string(from: datePicker.date)
-            onDateSelected?(datePicker.date)
+            //            onDateSelected?(datePicker.date)
+            
+            // Создаем дату с полуднем UTC для избежания проблем с часовыми поясами
+            let calendar = Calendar.current
+            let dateComponents = calendar.dateComponents([.year, .month, .day], from: datePicker.date)
+            
+            var components = DateComponents()
+            components.year = dateComponents.year
+            components.month = dateComponents.month
+            components.day = dateComponents.day
+            components.hour = 12  // Устанавливаем полдень
+            components.timeZone = TimeZone(identifier: "UTC")
+            
+            let dateWithNoonUTC = Calendar.current.date(from: components) ?? datePicker.date
+            
+            onDateSelected?(dateWithNoonUTC)
         }
         resignFirstResponder()
     }
     
     @objc private func editingDidBegin() {
         isShowingDatePicker = fieldState.usesDatePicker
-                if fieldState == .name || fieldState == .writeSomething {
-                    inputView = nil
-                    inputAccessoryView = nil
-                }
+        if fieldState == .name || fieldState == .writeSomething {
+            inputView = nil
+            inputAccessoryView = nil
+        }
     }
     
     @objc private func editingDidEnd() {
@@ -214,22 +242,22 @@ final class CommonTextField: UITextField {
     
     @objc private func textDidChange(_ sender: UITextField) {
         if fieldState == .cycleDuration, let text = sender.text, let value = Int(text) {
-                    if value < 0 || value > 50 {
-                        sender.text = ""
-                        onValueSelected?(0)
-                    } else {
-                        onValueSelected?(value)
-                    }
-                } else if fieldState == .age, let text = sender.text, let value = Int(text) {
-                    if value < 10 {
-                        sender.text = ""
-                        textDidChange?("")
-                    } else {
-                        textDidChange?(text)
-                    }
-                } else {
-                    textDidChange?(sender.text ?? "")
-                }
+            if value < 0 || value > 50 {
+                sender.text = ""
+                onValueSelected?(0)
+            } else {
+                onValueSelected?(value)
+            }
+        } else if fieldState == .age, let text = sender.text, let value = Int(text) {
+            if value < 10 {
+                sender.text = ""
+                textDidChange?("")
+            } else {
+                textDidChange?(text)
+            }
+        } else {
+            textDidChange?(sender.text ?? "")
+        }
     }
     
     override func textRect(forBounds bounds: CGRect) -> CGRect {
