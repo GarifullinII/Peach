@@ -21,6 +21,7 @@ struct BaseSymptomsModel {
     let symptoms: [BaseSymptom]
     let discharge: [BaseSymptom]
     let profuseBleeding: [BaseSymptom]
+    let mySymptoms: [BaseSymptom]
 
     static var model: [Self] = [
         .init(
@@ -48,6 +49,8 @@ struct BaseSymptomsModel {
                 .init(title: AssetString.medium.text, type: .red),
                 .init(title: AssetString.strong.text, type: .red),
                 .init(title: AssetString.blood_clots.text, type: .red),
+            ], mySymptoms: [
+                // Пустой массив для пользовательских симптомов
             ])
     ]
 }

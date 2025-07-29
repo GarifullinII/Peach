@@ -6,10 +6,15 @@
 //
 
 import UIKit
+import Combine
 
 final class SympotmsViewController<View: SymptomsView>:
     BaseViewController<View>, UICollectionViewDataSource,
     UICollectionViewDelegate, UIGestureRecognizerDelegate {
+    
+    // MARK: - Properties
+        
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Lifecycle
     
@@ -98,7 +103,7 @@ final class SympotmsViewController<View: SymptomsView>:
     // MARK: - UICollectionViewDataSource methods
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3
+        return 4
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -109,6 +114,8 @@ final class SympotmsViewController<View: SymptomsView>:
             return contentView.viewModel.dataSource.value?.discharge.count ?? 0
         case 2:
             return contentView.viewModel.dataSource.value?.profuseBleeding.count ?? 0
+        case 3:
+            return contentView.viewModel.dataSource.value?.mySymptoms.count ?? 0
         default:
             return 0
         }
@@ -139,6 +146,11 @@ final class SympotmsViewController<View: SymptomsView>:
         case 2:
             cell.configure(
                 type: (contentView.viewModel.dataSource.value?.profuseBleeding[indexPath.row])!
+            )
+            return cell
+        case 3:
+            cell.configure(
+                type: (contentView.viewModel.dataSource.value?.mySymptoms[indexPath.row])!
             )
             return cell
         default:

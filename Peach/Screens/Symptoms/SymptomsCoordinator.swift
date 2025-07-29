@@ -47,9 +47,11 @@ final class SymptomsCoordinator: BaseCoordinator {
 
         viewModel.output.sink { [weak self] output in
             switch output {
-            case .dismiss:
-                self?.output.send(.dismiss)
-            }
+                        case .dismiss:
+                            self?.output.send(.dismiss)
+                        case .clearTextField:
+                            break
+                        }
         }.store(in: &cancellables)
 
         router.push(vc, hideBottomBar: true)

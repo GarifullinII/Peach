@@ -16,4 +16,5 @@ enum SymptomsInput {
 
 enum SymptomsOutput {
     case dismiss
+    case clearTextField
 }
