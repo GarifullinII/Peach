@@ -65,6 +65,7 @@ enum AssetString: String {
     case medium = "medium"
     case strong = "strong"
     case blood_clots = "blood_clots"
+    case my_symptoms = "my_symptoms"
     case profuse_bleeding = "profuse_bleeding"
     case add_symptom = "add_symptom"
     case write_smth = "write_smth"
