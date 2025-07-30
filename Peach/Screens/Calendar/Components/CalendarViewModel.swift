@@ -39,12 +39,6 @@ final class CalendarViewModel: ObservableObject {
     }
     
     func savePeriodDateChanges() {
-        //            guard let selectedDay = selectedDay,
-        //                  let calendarManager = calendarManager else { return }
-        //
-        //            // Закрываем модальное окно
-        //            isModelAreRefreshing = false
-        
         guard let selectedDay = selectedDay,
               let calendarManager = calendarManager else { return }
         
@@ -56,6 +50,7 @@ final class CalendarViewModel: ObservableObject {
         
         // Сохраняем обновленную модель
         UserDefaultsManager.shared.save(user, Config.userModelKey.rawValue)
+        SymptomsManager.shared.setCurrentUser(user.id)
         
         // Выводим обновленные данные
         print("Сохраненные данные UserModel ===")

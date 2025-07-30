@@ -138,6 +138,7 @@ final class SignInViewModelImpl: BaseViewModel, SignInViewModel {
     
     private func saveUser(model: UserModel?, completion: (() -> Void)) {
         UserDefaultsManager.shared.save(model, Config.userModelKey.rawValue)
+        SymptomsManager.shared.setCurrentUser(model?.id)
         completion()
     }
     
