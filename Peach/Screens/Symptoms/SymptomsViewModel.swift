@@ -102,50 +102,21 @@ final class SymptomsViewModelImpl: BaseViewModel, SymptomsViewModel {
                     }
                 }
             case .addAdditionalSymptom(let additionalSymptom):
-                self.additionalSymptom = additionalSymptom
-                if !additionalSymptom.isEmpty {
-                    print("Пользователь ввел в поле 'Напишите что-нибудь': \(additionalSymptom)")
-                    // Добавляем новый симптом, если его еще нет в списке
-                    if !userSymptoms.contains(additionalSymptom) {
-                        var updatedSymptoms = userSymptoms
-                        updatedSymptoms.append(additionalSymptom)
-                        updateUserSymptoms(updatedSymptoms)
-                        // Очищаем текстовое поле после добавления симптома
-                        self.output.send(.clearTextField)
-                    }
-                }
+                            if !additionalSymptom.isEmpty {
+                                let trimmedSymptom = additionalSymptom.trimmingCharacters(in: .whitespacesAndNewlines)
+                                if !trimmedSymptom.isEmpty && !userSymptoms.contains(trimmedSymptom) {
+                                    var updatedSymptoms = userSymptoms
+                                    updatedSymptoms.append(trimmedSymptom)
+                                    updateUserSymptoms(updatedSymptoms)
+                                    self.output.send(.clearTextField)
+                                }
+                            }
             case .save:
                 self.save()
             case .dismiss:
                 self.output.send(.dismiss)
             }
         }.store(in: &cancellables)
-        
-        //        input.sink { [weak self] input in
-        //            guard let self else { return }
-        //
-        //            switch input {
-        //            case .refreshModel(let indexPath):
-        //                if selectedSymptoms.contains(where: {$0.key == indexPath} ) {
-        //                    selectedSymptoms[indexPath] = nil
-        //                } else {
-        //                    selectedSymptoms[indexPath] = true
-        //                }
-        //            case .addAdditionalSymptom(let additionalSymptom):
-        //                self.additionalSymptom = additionalSymptom
-        //                if !additionalSymptom.isEmpty {
-        //                                    print("Пользователь ввел в поле 'Напишите что-нибудь': \(additionalSymptom)")
-        //                                    // Отображаем весь введенный текст как один симптом
-        //                                    updateUserSymptoms([additionalSymptom])
-        //                                } else {
-        //                                    updateUserSymptoms([])
-        //                                }
-        //            case .save:
-        //                self.save()
-        //            case .dismiss:
-        //                self.output.send(.dismiss)
-        //            }
-        //        }.store(in: &cancellables)
     }
     
     private func save() {
@@ -199,7 +170,6 @@ final class SymptomsViewModelImpl: BaseViewModel, SymptomsViewModel {
             notificationGenerator.notificationOccurred(.success)
         }
         
-        
         // Сохраняем пользовательские симптомы в UserDefaults
         saveUserSymptomsToUserDefaults()
         
@@ -216,7 +186,6 @@ final class SymptomsViewModelImpl: BaseViewModel, SymptomsViewModel {
         model?.symptoms.forEach{  indexPath in
             selectedSymptoms[indexPath] = true
         }
-        
         
         // Загружаем пользовательские симптомы из UserDefaults
         loadUserSymptomsFromUserDefaults()

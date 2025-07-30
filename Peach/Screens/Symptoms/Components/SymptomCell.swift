@@ -81,6 +81,7 @@ final class SymptomCell: BaseCollectionCell {
             titleLabel.textColor = type.type.textColor
         }
         titleLabel.text = type.title
+        titleLabel.numberOfLines = 1
         cellType = type.type
     }
 

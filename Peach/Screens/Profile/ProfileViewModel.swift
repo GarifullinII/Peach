@@ -52,6 +52,8 @@ final class ProfileViewModelImpl: BaseViewModel, ProfileViewModel {
                 self.output.send(.showPremium)
             case .signOut:
                 UserDefaultsManager.shared.remove(Config.userModelKey.rawValue)
+                SymptomsManager.shared.clearUserData()
+                SymptomsManager.shared.setCurrentUser(nil)
                 self.output.send(.goToSetNameAndAge)
             }
         }.store(in: &cancellables)

@@ -73,11 +73,10 @@ final class SympotmsViewController<View: SymptomsView>:
     }
     
     private func contentViewActions() {
-        contentView.textField.textDidChange = { [weak self] additionalSymptom in
-            self?.contentView.viewModel.input.send(.addAdditionalSymptom(additionalSymptom))
-        }
-        
         contentView.saveHandler = { [weak self] in
+            if let symptom = self?.contentView.textField.text {
+                self?.contentView.viewModel.input.send(.addAdditionalSymptom(symptom))
+            }
             self?.contentView.viewModel.input.send(.save)
         }
     }
