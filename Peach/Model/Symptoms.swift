@@ -9,6 +9,7 @@ import Foundation
 
 struct Symptoms: Codable {
     let date: Date
-    var symptoms: [IndexPath] = [] // индексы выбранных ячеек
-    var note: String // дополнительные симптомы (сетятся в текстфилд)
+    var symptoms: [IndexPath] = []
+    var note: String
+    var userSymptoms: [String] = []
 }

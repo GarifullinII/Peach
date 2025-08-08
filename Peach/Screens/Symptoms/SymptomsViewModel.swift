@@ -143,21 +143,23 @@ final class SymptomsViewModelImpl: BaseViewModel, SymptomsViewModel {
         }
         
         
-        if !SymptomsManager.shared.contains(date: currentDate) && (!additionalSymptom.isEmpty || !selectedSymptoms.isEmpty)  {
+        if !SymptomsManager.shared.contains(date: currentDate) && (!additionalSymptom.isEmpty || !selectedSymptoms.isEmpty || !userSymptoms.isEmpty) {
             // save
             let symptomsModel = Symptoms(
                 date: currentDate,
                 symptoms: Array(selectedSymptoms.keys),
-                note: additionalSymptom
+                note: additionalSymptom,
+                userSymptoms: userSymptoms
             )
             
             SymptomsManager.shared.add(model: symptomsModel)
-        } else if SymptomsManager.shared.contains(date: currentDate) && (!additionalSymptom.isEmpty || !selectedSymptoms.isEmpty)  {
+        } else if SymptomsManager.shared.contains(date: currentDate) && (!additionalSymptom.isEmpty || !selectedSymptoms.isEmpty || !userSymptoms.isEmpty)  {
             // update
             SymptomsManager.shared.update(
                 date: currentDate,
                 symptoms: Array(selectedSymptoms.keys),
-                note: additionalSymptom
+                note: additionalSymptom,
+                userSymptoms: userSymptoms
             )
         } else {
             // delete
@@ -169,9 +171,6 @@ final class SymptomsViewModelImpl: BaseViewModel, SymptomsViewModel {
             notificationGenerator.prepare()
             notificationGenerator.notificationOccurred(.success)
         }
-        
-        // Сохраняем пользовательские симптомы в UserDefaults
-        saveUserSymptomsToUserDefaults()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.input.send(.dismiss)
@@ -187,8 +186,8 @@ final class SymptomsViewModelImpl: BaseViewModel, SymptomsViewModel {
             selectedSymptoms[indexPath] = true
         }
         
-        // Загружаем пользовательские симптомы из UserDefaults
-        loadUserSymptomsFromUserDefaults()
+        // Загружаем пользовательские симптомы из модели Symptoms
+                userSymptoms = model?.userSymptoms ?? []
         
         // Обновляем отображение пользовательских симптомов
         updateDataSource()
@@ -233,23 +232,5 @@ final class SymptomsViewModelImpl: BaseViewModel, SymptomsViewModel {
         guard indexPath.row < userSymptoms.count else { return }
         userSymptoms.remove(at: indexPath.row)
         updateDataSource()
-        saveUserSymptomsToUserDefaults()
-    }
-    
-    // Метод для сохранения пользовательских симптомов в UserDefaults
-    private func saveUserSymptomsToUserDefaults() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let dateKey = dateFormatter.string(from: currentDate)
-        UserDefaults.standard.set(userSymptoms, forKey: "user_symptoms_\(dateKey)")
-    }
-    
-    // Метод для загрузки пользовательских симптомов из UserDefaults
-    private func loadUserSymptomsFromUserDefaults() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let dateKey = dateFormatter.string(from: currentDate)
-        let savedSymptoms = UserDefaults.standard.stringArray(forKey: "user_symptoms_\(dateKey)") ?? []
-        userSymptoms = savedSymptoms
     }
 }

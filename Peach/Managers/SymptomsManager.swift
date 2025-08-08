@@ -39,14 +39,19 @@ final class SymptomsManager {
         return symptom
     }
     
-    func update(date: Date, symptoms: [IndexPath], note: String) {
+    func update(date: Date, symptoms: [IndexPath], note: String, userSymptoms: [String] = []) {
         if let index = self.symptoms.firstIndex(where: { Calendar.current.isDate($0.date, inSameDayAs: date) } ) {
             self.symptoms[index].symptoms = symptoms
             self.symptoms[index].note = note
+            self.symptoms[index].userSymptoms = userSymptoms
             
             if !note.isEmpty {
                 print("Обновлен симптом для даты \(date): \(note)")
             }
+            
+            if !userSymptoms.isEmpty {
+                            print("Обновлены пользовательские симптомы для даты \(date): \(userSymptoms.joined(separator: ", "))")
+                        }
         }
     }
     
@@ -57,6 +62,10 @@ final class SymptomsManager {
             if !model.note.isEmpty {
                 print("Добавлен новый симптом для даты \(model.date): \(model.note)")
             }
+            
+            if !model.userSymptoms.isEmpty {
+                            print("Добавлены пользовательские симптомы для даты \(model.date): \(model.userSymptoms.joined(separator: ", "))")
+                        }
         }
     }
     
