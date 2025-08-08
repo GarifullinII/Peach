@@ -51,7 +51,9 @@ final class ProfileViewModelImpl: BaseViewModel, ProfileViewModel {
             case .premiumTap:
                 self.output.send(.showPremium)
             case .signOut:
-                UserDefaultsManager.shared.remove(Config.userModelKey.rawValue)
+//                UserDefaultsManager.shared.remove(Config.userModelKey.rawValue)
+                // Удаляем из CoreData
+                CoreDataManager.shared.deleteUserModel()
                 SymptomsManager.shared.clearUserData()
                 SymptomsManager.shared.setCurrentUser(nil)
                 self.output.send(.goToSetNameAndAge)
@@ -61,9 +63,19 @@ final class ProfileViewModelImpl: BaseViewModel, ProfileViewModel {
 
     private func setup() {
         profileCellModel.value = ProfileCellModel.model
-        userModel.value = UserDefaultsManager.shared.load(
-            UserModel.self,
-            Config.userModelKey.rawValue
-        )
+//        userModel.value = UserDefaultsManager.shared.load(
+//            UserModel.self,
+//            Config.userModelKey.rawValue
+//        )
+        
+        // Загружаем из CoreData
+        print(">>DEBUG: ProfileViewModel - загружаем пользователя из CoreData")
+        userModel.value = CoreDataManager.shared.loadUserModel()
+        
+        if let user = userModel.value {
+            print(">>DEBUG: ProfileViewModel - пользователь успешно загружен: \(user.name ?? "без имени")")
+        } else {
+            print(">>DEBUG: ProfileViewModel - пользователь не найден в CoreData")
+        }
     }
 }

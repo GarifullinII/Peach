@@ -26,9 +26,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window?.makeKeyAndVisible()
 
+        // Инициализируем CoreData
+        CoreDataManager.shared.checkAndMigrateIfNeeded()
+        
         OpenAIManager.shared.setup()
         appCoordinator?.start()
 
         return true
     }
+    
+    
 }

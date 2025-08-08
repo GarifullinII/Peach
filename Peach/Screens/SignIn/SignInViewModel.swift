@@ -77,53 +77,76 @@ final class SignInViewModelImpl: BaseViewModel, SignInViewModel {
                 }
             case .fillFromBottomTF(let text):
                 if let duration = Int(text), duration >= 0, duration <= 50 {
-                    userModel.value?.cycle_duration = duration
+                    userModel.value?.cycleDuration = duration
                 } else {
-                    userModel.value?.cycle_duration = nil
+                    userModel.value?.cycleDuration = nil
                     output.send(.showAlert)
                 }
             case .setDate(let date, let index):
-                let age = Calendar.current.dateComponents([.year], from: date, to: Date()).year ?? 0
+                //                let age = Calendar.current.dateComponents([.year], from: date, to: Date()).year ?? 0
+                
+                // Вычисление возраста с учетом дня рождения
+                let calendar = Calendar.current
+                let now = Date()
+                
+                // Получаем компоненты даты рождения и текущей даты
+                let birthComponents = calendar.dateComponents([.year, .month, .day], from: date)
+                let nowComponents = calendar.dateComponents([.year, .month, .day], from: now)
+                
+                // Вычисляем возраст
+                var age = (nowComponents.year ?? 0) - (birthComponents.year ?? 0)
+                
+                // Проверяем, прошел ли день рождения в этом году
+                let birthMonth = birthComponents.month ?? 0
+                let birthDay = birthComponents.day ?? 0
+                let currentMonth = nowComponents.month ?? 0
+                let currentDay = nowComponents.day ?? 0
+                
+                // Если день рождения еще не наступил в этом году, уменьшаем возраст на 1
+                if currentMonth < birthMonth || (currentMonth == birthMonth && currentDay < birthDay) {
+                    age -= 1
+                }
+                
                 if index == 1 {
                     if validateAge(age) {
                         var updatedUser = userModel.value ?? UserModel()
-                        updatedUser.birth_date = date
+                        updatedUser.birthDate = date
                         updatedUser.age = age
                         userModel.send(updatedUser)
                     } else {
-//                        userModel.send(UserModel())
+                        //                        userModel.send(UserModel())
                         var updatedUser = userModel.value ?? UserModel()
-                        updatedUser.birth_date = nil
+                        updatedUser.birthDate = nil
                         updatedUser.age = nil
                         userModel.send(updatedUser)
                     }
                 } else if index == 2 {
                     var updatedUser = userModel.value ?? UserModel()
-                    updatedUser.start_cycle_date = date
+                    updatedUser.startCycleDate = date
                     userModel.send(updatedUser)
                 }
             case .saveModel:
                 print("=== Проверка userModel перед сохранением ===")
                 print("Имя: \(userModel.value?.name ?? "не указано")")
                 print("Возраст: \(userModel.value?.age.map(String.init) ?? "не указан")")
-                print("Дата рождения: \(userModel.value?.birth_date?.description ?? "не указана")")
-                print("Дата цикла: \(userModel.value?.start_cycle_date?.description ?? "не указана")")
-                print("Длительность цикла: \(userModel.value?.cycle_duration.map(String.init) ?? "не указана")")
+                print("Дата рождения: \(userModel.value?.birthDate?.description ?? "не указана")")
+                print("Дата цикла: \(userModel.value?.startCycleDate?.description ?? "не указана")")
+                print("Длительность цикла: \(userModel.value?.cycleDuration.map(String.init) ?? "не указана")")
                 print("==================================")
                 
                 if let user = userModel.value,
                    !(user.name?.isEmpty ?? true),
                    user.age != nil,
-                   user.birth_date != nil,
-                   user.start_cycle_date != nil,
-                   user.cycle_duration != nil {
+                   user.birthDate != nil,
+                   user.startCycleDate != nil,
+                   user.cycleDuration != nil {
                     saveUser(model: user) {
                         print("=== Сохраненные данные UserModel ===")
                         print("Имя: \(self.userModel.value?.name ?? "не указано")")
                         print("Возраст: \(self.userModel.value?.age.map(String.init) ?? "не указан")")
-                        print("Дата рождения: \(self.userModel.value?.birth_date?.description ?? "не указана")")
-                        print("Дата цикла: \(self.userModel.value?.start_cycle_date?.description ?? "не указана")")
-                        print("Длительность цикла: \(self.userModel.value?.cycle_duration ?? 0)")
+                        print("Дата рождения: \(self.userModel.value?.birthDate?.description ?? "не указана")")
+                        print("Дата цикла: \(self.userModel.value?.startCycleDate?.description ?? "не указана")")
+                        print("Длительность цикла: \(self.userModel.value?.cycleDuration ?? 0)")
                         print("==================================")
                         self.output.send(.dismiss)
                     }
@@ -137,8 +160,24 @@ final class SignInViewModelImpl: BaseViewModel, SignInViewModel {
     }
     
     private func saveUser(model: UserModel?, completion: (() -> Void)) {
-        UserDefaultsManager.shared.save(model, Config.userModelKey.rawValue)
-        SymptomsManager.shared.setCurrentUser(model?.id)
+        //        UserDefaultsManager.shared.save(model, Config.userModelKey.rawValue)
+        //        SymptomsManager.shared.setCurrentUser(model?.id)
+        
+        guard let model = model else {
+            print(">>DEBUG: SignInViewModel.saveUser - модель пользователя nil, завершаем")
+            completion()
+            return
+        }
+        
+        print(">>DEBUG: SignInViewModel.saveUser - сохраняем нового пользователя в CoreData:")
+        print("  - Имя: \(model.name ?? "nil")")
+        print("  - Возраст: \(model.age?.description ?? "nil")")
+        print("  - Дата начала цикла: \(model.startCycleDate?.description ?? "nil")")
+        
+        // Сохраняем в CoreData вместо UserDefaults
+        CoreDataManager.shared.saveUserModel(model)
+        SymptomsManager.shared.setCurrentUser(model.id)
+        print(">>DEBUG: SignInViewModel.saveUser - сохранение завершено")
         completion()
     }
     
@@ -162,8 +201,8 @@ final class SignInViewModelImpl: BaseViewModel, SignInViewModel {
             }
             return false
         case 3:
-            guard let startCycleDate = userModel.value?.start_cycle_date,
-                  let cycleDuration = userModel.value?.cycle_duration else {
+            guard let startCycleDate = userModel.value?.startCycleDate,
+                  let cycleDuration = userModel.value?.cycleDuration else {
                 output.send(.showAlert)
                 return false
             }

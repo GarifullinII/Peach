@@ -11,6 +11,12 @@
 		6E873AA32E1D435C009C284A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E873AA22E1D435C009C284A /* NetworkManager.swift */; };
 		6E873AA52E1DB9AD009C284A /* URLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E873AA42E1DB9AD009C284A /* URLManager.swift */; };
 		6E873AA72E1F1279009C284A /* NetworkModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E873AA62E1F1279009C284A /* NetworkModels.swift */; };
+		6EEDBAE72E4361EE00CC59FB /* PeachCD.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6EEDBAE52E4361EE00CC59FB /* PeachCD.xcdatamodeld */; };
+		6EEDBAF42E437C3900CC59FB /* UserModelCD+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEDBAF22E437C3900CC59FB /* UserModelCD+CoreDataClass.swift */; };
+		6EEDBAF52E437C3900CC59FB /* UserModelCD+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEDBAF32E437C3900CC59FB /* UserModelCD+CoreDataProperties.swift */; };
+		6EEDBAF72E44ACB000CC59FB /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEDBAF62E44AC9000CC59FB /* CoreDataManager.swift */; };
+
+		6EEDBAFD2E460B0700CC59FB /* HorizonCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 6EEDBAFC2E460B0700CC59FB /* HorizonCalendar */; };
 		6EEE0F1A2E2663C000DE1964 /* Extension + NSAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEE0F192E2663C000DE1964 /* Extension + NSAttributedString.swift */; };
 		FF040F262AFD14AA00C09662 /* InnerFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF040F252AFD14AA00C09662 /* InnerFrameView.swift */; };
 		FF040F282AFD27CD00C09662 /* ExpandedSmallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF040F272AFD27CD00C09662 /* ExpandedSmallView.swift */; };
@@ -141,6 +147,13 @@
 		6E873AA22E1D435C009C284A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		6E873AA42E1DB9AD009C284A /* URLManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLManager.swift; sourceTree = "<group>"; };
 		6E873AA62E1F1279009C284A /* NetworkModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkModels.swift; sourceTree = "<group>"; };
+		6EEDBAE62E4361EE00CC59FB /* PeachCD.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PeachCD.xcdatamodel; sourceTree = "<group>"; };
+		6EEDBAED2E437B3D00CC59FB /* Peach.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Peach.xcodeproj; sourceTree = SOURCE_ROOT; };
+		6EEDBAF22E437C3900CC59FB /* UserModelCD+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserModelCD+CoreDataClass.swift"; sourceTree = "<group>"; };
+		6EEDBAF32E437C3900CC59FB /* UserModelCD+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserModelCD+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		6EEDBAF62E44AC9000CC59FB /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		6EEDBAF82E44B48600CC59FB /* Peach.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Peach.entitlements; sourceTree = "<group>"; };
+
 		6EEE0F192E2663C000DE1964 /* Extension + NSAttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + NSAttributedString.swift"; sourceTree = "<group>"; };
 		FF040F252AFD14AA00C09662 /* InnerFrameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerFrameView.swift; sourceTree = "<group>"; };
 		FF040F272AFD27CD00C09662 /* ExpandedSmallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedSmallView.swift; sourceTree = "<group>"; };
@@ -272,6 +285,7 @@
 			files = (
 				FFC3EB842ACF06EE00757436 /* OpenAISwift in Frameworks */,
 				FFC3EB7B2ACF06BA00757436 /* SnapKit in Frameworks */,
+				6EEDBAFD2E460B0700CC59FB /* HorizonCalendar in Frameworks */,
 				FFC3EB7E2ACF06D400757436 /* BottomSheet in Frameworks */,
 				FFC3EB872ACF077F00757436 /* MessageKit in Frameworks */,
 			);
@@ -280,6 +294,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6EEDBAF12E437B9200CC59FB /* ModelCoreData */ = {
+			isa = PBXGroup;
+			children = (
+				6EEDBAF22E437C3900CC59FB /* UserModelCD+CoreDataClass.swift */,
+				6EEDBAF32E437C3900CC59FB /* UserModelCD+CoreDataProperties.swift */,
+			);
+			path = ModelCoreData;
+			sourceTree = "<group>";
+		};
+		6EEDBAFE2E460C1000CC59FB /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 		FF040F242AFD149400C09662 /* ExpandedView */ = {
 			isa = PBXGroup;
 			children = (
@@ -301,6 +329,8 @@
 		FF4400D22AA75E7100318A76 = {
 			isa = PBXGroup;
 			children = (
+				6EEDBAED2E437B3D00CC59FB /* Peach.xcodeproj */,
+				6EEDBAE52E4361EE00CC59FB /* PeachCD.xcdatamodeld */,
 				FFC8B7612AA9B5E8003509B0 /* MARKS.swift */,
 				FF4400DD2AA75E7100318A76 /* Peach */,
 				FF4400DC2AA75E7100318A76 /* Products */,
@@ -318,6 +348,7 @@
 		FF4400DD2AA75E7100318A76 /* Peach */ = {
 			isa = PBXGroup;
 			children = (
+				6EEDBAF82E44B48600CC59FB /* Peach.entitlements */,
 				FF4400F22AA76FF400318A76 /* App */,
 				FF7EC9C42AB0C0A600485FE1 /* Managers */,
 				FF7EC9BF2AB0AE4000485FE1 /* Common */,
@@ -524,6 +555,7 @@
 		FF5EBC662AAF31E500BD7DFD /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				6EEDBAF12E437B9200CC59FB /* ModelCoreData */,
 				FF5EBC672AAF31EC00BD7DFD /* ProfileCellModel.swift */,
 				FF7EC9B82AB0791F00485FE1 /* PaymentCellModel.swift */,
 				FFB94AEC2AB1D74E00D7BFE7 /* OnboardingCellModel.swift */,
@@ -615,6 +647,7 @@
 		FF7EC9C42AB0C0A600485FE1 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				6EEDBAF62E44AC9000CC59FB /* CoreDataManager.swift */,
 				FF7EC9C52AB0C0B200485FE1 /* UserDefaultsManager.swift */,
 				FF15AC262AD40A8900554861 /* OpenAIManager.swift */,
 				FFA241A92B04F46500CB5BDE /* SymptomsManager.swift */,
@@ -752,6 +785,7 @@
 				FFC3EB7D2ACF06D400757436 /* BottomSheet */,
 				FFC3EB832ACF06EE00757436 /* OpenAISwift */,
 				FFC3EB862ACF077F00757436 /* MessageKit */,
+				6EEDBAFC2E460B0700CC59FB /* HorizonCalendar */,
 			);
 			productName = Peach;
 			productReference = FF4400DB2AA75E7100318A76 /* Peach.app */;
@@ -787,9 +821,16 @@
 				FFC3EB7C2ACF06D400757436 /* XCRemoteSwiftPackageReference "BottomSheet" */,
 				FFC3EB822ACF06EE00757436 /* XCRemoteSwiftPackageReference "OpenAISwift" */,
 				FFC3EB852ACF077F00757436 /* XCRemoteSwiftPackageReference "MessageKit" */,
+				6EEDBAFB2E460B0700CC59FB /* XCRemoteSwiftPackageReference "HorizonCalendar" */,
 			);
 			productRefGroup = FF4400DC2AA75E7100318A76 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 6EEDBAFE2E460C1000CC59FB /* Products */;
+					ProjectRef = 6EEDBAED2E437B3D00CC59FB /* Peach.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				FF4400DA2AA75E7100318A76 /* Peach */,
@@ -817,6 +858,9 @@
 			files = (
 				FFE888802AAA310B00B10780 /* Then.swift in Sources */,
 				6E873AA12E1D431F009C284A /* NetworkError.swift in Sources */,
+				6EEDBAF42E437C3900CC59FB /* UserModelCD+CoreDataClass.swift in Sources */,
+				6EEDBAF52E437C3900CC59FB /* UserModelCD+CoreDataProperties.swift in Sources */,
+
 				FFA241AA2B04F46500CB5BDE /* SymptomsManager.swift in Sources */,
 				FF80C8722ADD9ABF00813647 /* CustomMessageContentCell.swift in Sources */,
 				FFE888732AAA273000B10780 /* BaseViewController.swift in Sources */,
@@ -837,6 +881,7 @@
 				FFB641C32ADEAE780083DCDE /* ChatViewModel.swift in Sources */,
 				FFFEC4FF2AFB90B400413768 /* DayModel.swift in Sources */,
 				FF5E3F362AE7E4C4008EDBF2 /* MessageInputBar.swift in Sources */,
+				6EEDBAE72E4361EE00CC59FB /* PeachCD.xcdatamodeld in Sources */,
 				FF7EC9C12AB0AE5100485FE1 /* PinkButton.swift in Sources */,
 				FF5E3F2E2AE7E1BE008EDBF2 /* LimitOverViewModel.swift in Sources */,
 				FFE888772AAA27A900B10780 /* BaseViewModel.swift in Sources */,
@@ -854,6 +899,7 @@
 				FF0EE18D2AF261AD0051D9E7 /* Extension + View.swift in Sources */,
 				FF2BA4792AFA8E2F00A48C21 /* WeekdayHeader.swift in Sources */,
 				FF5EBC792AAF5C5800BD7DFD /* PremiumView.swift in Sources */,
+				6EEDBAF72E44ACB000CC59FB /* CoreDataManager.swift in Sources */,
 				FF4400FC2AA7749F00318A76 /* RouterImpl.swift in Sources */,
 				FFDB97662ABC65F90070E0AE /* PremiumSheetViewController.swift in Sources */,
 				FF4C61792AB3257700C6BB44 /* UserModel.swift in Sources */,
@@ -1084,6 +1130,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Peach/Peach.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 38NM7VX6QJ;
@@ -1115,6 +1162,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Peach/Peach.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 38NM7VX6QJ;
@@ -1165,6 +1213,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		6EEDBAFB2E460B0700CC59FB /* XCRemoteSwiftPackageReference "HorizonCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/HorizonCalendar";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		FFC3EB792ACF06BA00757436 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -1200,6 +1256,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		6EEDBAFC2E460B0700CC59FB /* HorizonCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6EEDBAFB2E460B0700CC59FB /* XCRemoteSwiftPackageReference "HorizonCalendar" */;
+			productName = HorizonCalendar;
+		};
 		FFC3EB7A2ACF06BA00757436 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FFC3EB792ACF06BA00757436 /* XCRemoteSwiftPackageReference "SnapKit" */;
@@ -1221,6 +1282,19 @@
 			productName = MessageKit;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		6EEDBAE52E4361EE00CC59FB /* PeachCD.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				6EEDBAE62E4361EE00CC59FB /* PeachCD.xcdatamodel */,
+			);
+			currentVersion = 6EEDBAE62E4361EE00CC59FB /* PeachCD.xcdatamodel */;
+			path = PeachCD.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = FF4400D32AA75E7100318A76 /* Project object */;
 }

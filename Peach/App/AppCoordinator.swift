@@ -30,14 +30,28 @@ final class AppCoordinator: BaseCoordinator {
         }
 
         let isUserFirstLaunch = !UserDefaults.standard.bool(forKey: Config.userFirstLaunchKey.rawValue)
-        let isUserExist = UserDefaultsManager.shared.load(UserModel.self, Config.userModelKey.rawValue) != nil
+//        let isUserExist = UserDefaultsManager.shared.load(UserModel.self, Config.userModelKey.rawValue) != nil
+        // Проверяем существование пользователя в CoreData
+        print(">>DEBUG: AppCoordinator.start - проверяем существование пользователя в CoreData")
+        let loadedUser = CoreDataManager.shared.loadUserModel()
+        let isUserExist = loadedUser != nil
+        
+        print(">>DEBUG: AppCoordinator.start - isUserFirstLaunch: \(isUserFirstLaunch)")
+        print(">>DEBUG: AppCoordinator.start - isUserExist: \(isUserExist)")
+        
+        if let user = loadedUser {
+            print(">>DEBUG: AppCoordinator.start - найден пользователь: \(user.name ?? "без имени")")
+        }
 
         if isUserFirstLaunch {
+            print(">>DEBUG: AppCoordinator.start - показываем онбординг (первый запуск)")
             showOnboarding()
         } else {
             if isUserExist {
+                print(">>DEBUG: AppCoordinator.start - показываем главный экран (пользователь существует)")
                 showMain()
             } else {
+                print(">>DEBUG: AppCoordinator.start - показываем экран входа (пользователь не найден)")
                 showSignIn()
             }
         }
