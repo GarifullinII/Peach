@@ -43,22 +43,30 @@ final class CalendarViewModel: ObservableObject {
               let calendarManager = calendarManager else { return }
         
         // Загружаем текущую модель пользователя
-        var user = UserDefaultsManager.shared.load(UserModel.self, Config.userModelKey.rawValue) ?? UserModel()
+//        var user = UserDefaultsManager.shared.load(UserModel.self, Config.userModelKey.rawValue) ?? UserModel()
         
+        // Загружаем текущую модель пользователя из CoreData
+        print(">>DEBUG: CalendarViewModel.savePeriodDateChanges - загружаем пользователя из CoreData")
+        var user = CoreDataManager.shared.loadUserModel() ?? UserModel()
+        
+        print(">>DEBUG: CalendarViewModel.savePeriodDateChanges - обновляем дату начала цикла на: \(selectedDay.date)")
         // Обновляем дату начала цикла на выбранную дату
-        user.start_cycle_date = selectedDay.date
+        user.startCycleDate = selectedDay.date
         
         // Сохраняем обновленную модель
-        UserDefaultsManager.shared.save(user, Config.userModelKey.rawValue)
+//        UserDefaultsManager.shared.save(user, Config.userModelKey.rawValue)
+        // Сохраняем обновленную модель в CoreData
+        print(">>DEBUG: CalendarViewModel.savePeriodDateChanges - сохраняем обновленного пользователя в CoreData")
+        CoreDataManager.shared.saveUserModel(user)
         SymptomsManager.shared.setCurrentUser(user.id)
         
         // Выводим обновленные данные
         print("Сохраненные данные UserModel ===")
         print("Имя: \(user.name ?? "Не указано")")
         print("Возраст: \(user.age ?? 0)")
-        print("Дата рождения: \(user.birth_date ?? Date())")
-        print("Дата цикла: \(user.start_cycle_date ?? Date())")
-        print("Длительность цикла: \(user.cycle_duration ?? 0)")
+        print("Дата рождения: \(user.birthDate ?? Date())")
+        print("Дата цикла: \(user.startCycleDate ?? Date())")
+        print("Длительность цикла: \(user.cycleDuration ?? 0)")
         
         // Обновляем minimumDate в CalendarManager
         calendarManager.minimumDate = selectedDay.date

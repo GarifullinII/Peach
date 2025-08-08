@@ -1,4 +1,5 @@
 {
+  "originHash" : "d404d8aa6f2b1c13bd0dedeb515e7c369933d8475c8397072527fc8abe5d13df",
   "pins" : [
     {
       "identity" : "bottomsheet",
@@ -7,6 +8,15 @@
       "state" : {
         "revision" : "4475b10b499099af390dee6f4420d44e50a0ec8c",
         "version" : "2.0.4"
+      }
+    },
+    {
+      "identity" : "horizoncalendar",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/airbnb/HorizonCalendar",
+      "state" : {
+        "branch" : "master",
+        "revision" : "2069d2fde2a65975cfd1930e62a413afae732262"
       }
     },
     {
@@ -46,5 +56,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

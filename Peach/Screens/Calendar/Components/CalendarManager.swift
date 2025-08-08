@@ -27,8 +27,18 @@ final class CalendarManager: ObservableObject {
     // MARK: - Initializers
 
     init() {
-        let user = UserDefaultsManager.shared.load(UserModel.self, Config.userModelKey.rawValue)
-        self.minimumDate = user?.start_cycle_date ?? Date()
+//        let user = UserDefaultsManager.shared.load(UserModel.self, Config.userModelKey.rawValue)
+        // Загружаем пользователя из CoreData
+        print(">>DEBUG: CalendarManager.init - загружаем пользователя из CoreData")
+        let user = CoreDataManager.shared.loadUserModel()
+        
+        if let user = user {
+            print(">>DEBUG: CalendarManager.init - пользователь загружен, дата начала цикла: \(user.startCycleDate?.description ?? "nil")")
+        } else {
+            print(">>DEBUG: CalendarManager.init - пользователь не найден, используем текущую дату")
+        }
+        
+        self.minimumDate = user?.startCycleDate ?? Date()
 
         let maximumDate = calendar.date(byAdding: .year, value: 1, to: minimumDate) ?? Date()
         self.maximumDate = maximumDate
@@ -50,8 +60,10 @@ final class CalendarManager: ObservableObject {
 
     // создаем изначальную модель
     func makeInitialModel(from startDate: Date, to endDate: Date) {
-        let user = UserDefaultsManager.shared.load(UserModel.self, Config.userModelKey.rawValue)
-        let periodDuration = user?.cycle_duration ?? 0
+//        let user = UserDefaultsManager.shared.load(UserModel.self, Config.userModelKey.rawValue)
+        // Загружаем пользователя из CoreData
+        let user = CoreDataManager.shared.loadUserModel()
+        let periodDuration = user?.cycleDuration ?? 0
         let allDates = getAllDates(minimumDate: startDate, maximumDate: endDate)
         let cycleDuration = 28
         let ovulationDay = 13
